@@ -1,1864 +1,874 @@
 <!DOCTYPE html>
-<!-- SEKVENS: Denne allerførste linje fortæller browseren (fx Chrome): "Dette er en HTML5 hjemmeside".
-     Uden den kan browseren misforstå koden.
-     EFFEKT I APPEN: Siden indlæses korrekt i alle moderne browsere. -->
-
+<!-- Sekvens: Fortaeller browseren at dette er en hjemmeside -->
 <html lang="da">
-<!-- SEKVENS: Her starter selve HTML-dokumentet. lang="da" fortæller at sproget er dansk.
-     EFFEKT I APPEN: Stavekontrol og skærmlæsere ved at siden er på dansk. -->
-
+<!-- Sekvens: Starter dokumentet. lang=da betyder dansk -->
 <head>
-<!-- SEKVENS: Alt inde i <head> er indstillinger og opsætning — det er IKKE synligt på siden.
-     EFFEKT I APPEN: Brugeren ser ingenting fra denne sektion direkte, men den styrer alt bag kulissen. -->
-
+<!-- Sekvens: Indstillinger for siden - ikke synligt for brugeren -->
   <meta charset="UTF-8"/>
-  <!-- SEKVENS: Sætter tegnsæt til UTF-8 så æ, ø og å vises korrekt.
-       EFFEKT I APPEN: Uden denne linje ville "Færdig" vises som "FÃ¦rdig". -->
-
+  <!-- Sekvens: Saetter sproget til dansk saa ae, oe og aa virker -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- SEKVENS: Gør siden mobilvenlig ved at tilpasse bredden til telefon/tablet-skærmen.
-       EFFEKT I APPEN: Uden den ville siden se meget lille og ulæselig ud på en telefon. -->
-
+  <!-- Sekvens: Goer siden mobilvenlig -->
   <title>GroupFlow</title>
-  <!-- SEKVENS: Sætter teksten der vises i browser-fanen.
-       EFFEKT I APPEN: Der står "GroupFlow" i den lille fane øverst i browseren. -->
-
+  <!-- Sekvens: Teksten der vises i browser-fanen -->
 <style>
-/* =============================================
-   CSS — STYLING
-   CSS bestemmer HVORDAN tingene ser ud:
-   farver, størrelser, afrunding, mellemrum.
-   CSS ændrer ALDRIG hvad appen gør — kun udseendet.
-============================================= */
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-/* SEKVENS: Stjernen (*) betyder "alle HTML-elementer på siden".
-   box-sizing: border-box — padding gør ikke elementer større end forventet.
-   margin: 0 og padding: 0 — nulstiller al standard-afstand i browseren.
-   EFFEKT I APPEN: Ingen uønskede mellemrum eller forskydninger nogen steder på siden. */
+/* Sekvens: Nulstiller al standard-afstand i browseren */
 
 body { font-family: Arial, sans-serif; background: #f4f4f0; color: #1a1a1a; }
-/* SEKVENS: Sætter grundindstillinger for hele siden.
-   font-family: Arial — al tekst bruger Arial-skrifttype.
-   background: #f4f4f0 — sidens baggrundsfarve er lys grå.
-   color: #1a1a1a — al tekst er næsten sort.
-   EFFEKT I APPEN: Den lyse grå baggrund og mørke tekst du ser overalt i appen. */
+/* Sekvens: Saetter skrifttype, baggrundsfarve og tekstfarve for hele siden */
 
 .page { display: none; min-height: 100vh; }
-/* SEKVENS: Alle elementer med CSS-klassen "page" skjules som standard (display: none).
-   min-height: 100vh — siden er mindst fuld skærmhøjde.
-   EFFEKT I APPEN: De 4 sider (login, dashboard, groups, kanban) er alle usynlige når appen starter.
-   JavaScript bestemmer hvilken der vises ved at tilføje klassen "active". */
+/* Sekvens: Alle sider er skjulte som standard */
 
 .page.active { display: block; }
-/* FORGRENING (CSS): KUN den side der har BÅDE klassen "page" OG klassen "active" vises.
-   Det svarer til: HVIS en side har "active"-klassen, SÅ vis den.
-   EFFEKT I APPEN: Det er grunden til at kun én side vises ad gangen.
-   Når du klikker "Log ind" tilføjer JavaScript "active" til dashboard og fjerner den fra login. */
+/* Forgrening: HVIS en side har klassen active, SÅ vis den - ellers forbliver den skjult */
 
-/* ---- LOGIN SIDE ---- */
 #login { align-items: center; justify-content: center; min-height: 100vh; background: #eef1ff; }
-/* SEKVENS: Styler kun login-siden (# betyder "elementet med id login").
-   align-items + justify-content: center — centrerer indholdet både vandret og lodret.
-   background: #eef1ff — lys blå-lilla baggrundsfarve.
-   EFFEKT I APPEN: Den blå-lilla baggrund på login-siden, og login-kortet er præcis i midten. */
+/* Sekvens: Login-siden faar lys blaa baggrund og centrerer indholdet */
 
 #login.active { display: flex; }
-/* FORGRENING (CSS): Login-siden bruger display:flex (ikke display:block som de andre sider).
-   Flex er nødvendigt for at center-indstillingerne ovenfor virker.
-   EFFEKT I APPEN: Login-kortet er centreret på skærmen — både vandret og lodret. */
+/* Forgrening: HVIS login har klassen active, SÅ vis den med flex saa kortet er i midten */
 
 .center-card { background: white; padding: 40px; border-radius: 16px; width: 380px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-/* SEKVENS: Styler den hvide login-boks.
-   background: white — hvid baggrund.
-   padding: 40px — 40px luft indeni boksen på alle sider.
-   border-radius: 16px — afrundede hjørner.
-   width: 380px — fast bredde.
-   box-shadow — skygge under boksen.
-   EFFEKT I APPEN: Den hvide kortboks med skygge midt på login-siden. */
+/* Sekvens: Den hvide login-boks - hvid baggrund, afrundede hjoerner, skygge */
 
 .center-card h1 { font-size: 24px; margin-bottom: 4px; }
-/* SEKVENS: Gør overskriften (h1) inde i login-kortet 24 pixels stor med 4px afstand under.
-   EFFEKT I APPEN: "🌀 GroupFlow"-teksten øverst i login-boksen er stor og fed. */
+/* Sekvens: Overskriften i login-boksen er stor */
 
 .center-card .sub { color: #888; font-size: 14px; margin-bottom: 20px; }
-/* SEKVENS: Styler underteksten i login-kortet — grå farve (#888), lille skrift (14px), 20px under.
-   EFFEKT I APPEN: Den grå tekst "Gruppearbejde gjort nemt" under titlen. */
+/* Sekvens: Underteksten er graa og lille */
 
 .center-card .link { text-align: center; color: #5b7fff; font-size: 13px; cursor: pointer; margin-top: 12px; }
-/* SEKVENS: Styler "Glemt adgangskode?"-teksten.
-   color: #5b7fff — blå farve.
-   cursor: pointer — musen skifter til en hånd når man holder over den.
-   EFFEKT I APPEN: Den blå klikbare tekst "Glemt adgangskode?" nederst i login-boksen. */
+/* Sekvens: Den blaa klikbare tekst nederst i login-boksen */
 
-/* ---- NAVIGATION ---- */
 nav { display: flex; align-items: center; gap: 10px; padding: 14px 24px; background: white; border-bottom: 1px solid #e0e0e0; }
-/* SEKVENS: Styler navigationsbaren øverst på alle sider undtagen login.
-   display: flex — elementer placeres i en vandret række.
-   align-items: center — elementer er lodret centrerede.
-   gap: 10px — 10px mellemrum mellem hvert element.
-   padding: 14px 24px — luft indeni baren.
-   background: white — hvid baggrund.
-   border-bottom — en tynd grå streg under baren.
-   EFFEKT I APPEN: Den hvide bjælke øverst med logo til venstre og knapper til højre. */
+/* Sekvens: Den hvide bjælke øverst med logo og knapper */
 
 nav span { font-weight: bold; font-size: 16px; margin-right: auto; }
-/* SEKVENS: Styler span-tekst inde i nav (bruges til app-logoet "🌀 GroupFlow").
-   font-weight: bold — fed tekst.
-   margin-right: auto — dette skubber ALLE elementer der kommer EFTER span helt til højre.
-   EFFEKT I APPEN: "🌀 GroupFlow" er til venstre, alle knapper er til højre — fordi auto-margin fylder al ledig plads. */
+/* Sekvens: Logo-teksten er fed og skubber knapperne til hojre */
 
-/* ---- INDHOLDSSEKTIONEN ---- */
 .content { max-width: 860px; margin: 0 auto; padding: 28px 24px; }
-/* SEKVENS: Begrænser indholdets bredde til max 860px og centrerer det.
-   margin: 0 auto — auto margin til venstre og højre centrerer blokken.
-   EFFEKT I APPEN: På store skærme er indholdet ikke super bredt men centreret — bedre læsbarhed. */
+/* Sekvens: Indholdet er max 860px bredt og centreret */
 
 .content h2 { font-size: 24px; margin-bottom: 16px; }
-/* SEKVENS: Gør store overskrifter (h2) inde i content-sektionen 24px med 16px under.
-   EFFEKT I APPEN: "Hej, Benjamin 👋" og "Mine grupper" er store og har luft under sig. */
+/* Sekvens: Store overskrifter er 24px */
 
 .content h3 { font-size: 16px; margin: 20px 0 10px; color: #333; }
-/* SEKVENS: Styler mellemstore overskrifter (h3) — 16px, mørkegrå, 20px over og 10px under.
-   EFFEKT I APPEN: Sektionsoverskrifter som "⏰ Kommende deadlines" og "👥 Aktive grupper". */
+/* Sekvens: Mellemstore overskrifter er graa */
 
-/* ---- STATISTIKBOKSE ---- */
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
-/* SEKVENS: Opretter et CSS-grid med 3 lige brede kolonner.
-   repeat(3, 1fr) betyder: gentag 3 gange, hver tager 1 del af den tilgængelige bredde.
-   gap: 14px — 14px mellemrum mellem boksene.
-   EFFEKT I APPEN: De statistikbokse på dashboard vises side om side i 3 kolonner. */
+/* Sekvens: Statistikboksene vises i 3 kolonner ved siden af hinanden */
 
 .stat { background: white; border-radius: 12px; padding: 18px; text-align: center; border: 1px solid #e0e0e0; font-size: 13px; color: #666; }
-/* SEKVENS: Styler en enkelt statistikboks — hvid, afrundet, centreret tekst, grå kant.
-   EFFEKT I APPEN: Udseendet på boksene "3 Aktive grupper" og "4 Kommende deadlines". */
+/* Sekvens: En enkelt statistikboks er hvid med afrundede hjoerner */
 
 .stat .num { font-size: 30px; font-weight: bold; color: #1a1a1a; margin-bottom: 4px; }
-/* SEKVENS: Gør det store tal inde i statistikboksen meget stort (30px) og fed.
-   EFFEKT I APPEN: Tallene "3" og "4" er store og fremhævede i statistikboksene. */
+/* Sekvens: Tallet i statistikboksen er stort og fed */
 
-/* ---- DEADLINES ---- */
 .deadline { padding: 10px 14px; border-radius: 10px; margin-bottom: 8px; font-size: 14px; }
-/* SEKVENS: Grundstyling for alle deadline-bokse — indre afstand, afrundede hjørner, 8px under.
-   EFFEKT I APPEN: Formen og størrelsen på alle deadline-rækker, uanset farve. */
+/* Sekvens: Grundform for alle deadline-bokse */
 
-.deadline.red { background: #fff0f0; border-left: 4px solid #ff6b6b; }
-/* FORGRENING (CSS): KUN deadline-bokse med klassen "red" får denne styling.
-   background: #fff0f0 — lys rød baggrund.
-   border-left: 4px solid #ff6b6b — en tynd rød streg i venstre side.
-   EFFEKT I APPEN: "Marketinganalyse — I morgen" vises med rød farve fordi den er akut. */
+.deadline.red    { background: #fff0f0; border-left: 4px solid #ff6b6b; }
+/* Forgrening: HVIS deadline har klassen red, SÅ faar den roed farve - betyder det haster */
 
 .deadline.yellow { background: #fff8ee; border-left: 4px solid #f4a63a; }
-/* FORGRENING (CSS): KUN deadline-bokse med klassen "yellow" får gul/orange styling.
-   EFFEKT I APPEN: Deadlines der er snart men ikke akutte vises med gul/orange farve. */
+/* Forgrening: HVIS deadline har klassen yellow, SÅ faar den gul farve - betyder snart */
 
-.deadline.green { background: #f0fff8; border-left: 4px solid #43c98e; }
-/* FORGRENING (CSS): KUN deadline-bokse med klassen "green" får grøn styling.
-   EFFEKT I APPEN: Deadlines langt ude i fremtiden vises med grøn farve — ingen stress. */
+.deadline.green  { background: #f0fff8; border-left: 4px solid #43c98e; }
+/* Forgrening: HVIS deadline har klassen green, SÅ faar den groen farve - betyder god tid */
 
-/* ---- NOTIFIKATIONER ---- */
 .notif { padding: 10px 14px; background: white; border-radius: 10px; margin-bottom: 8px; font-size: 14px; border: 1px solid #e8e8e8; }
-/* SEKVENS: Styler notifikationsrækker — hvide bokse med afrundede hjørner og grå kant.
-   EFFEKT I APPEN: De hvide bokse med beskeder som "Aya har tilføjet en opgave". */
+/* Sekvens: Hvide notifikationsbokse med afrundede hjoerner */
 
 .notif span { color: #aaa; font-size: 12px; }
-/* SEKVENS: Gør span-tekst inde i notifikationer lysegrå og lille.
-   EFFEKT I APPEN: Tidsstemplet "10 min. siden" vises i lys grå lille skrift. */
+/* Sekvens: Tidsstemplet i notifikationer er lysegraat og lille */
 
-/* ---- GRUPPE-RÆKKER ---- */
 .group-row { padding: 14px 16px; background: white; border-radius: 12px; margin-bottom: 8px; cursor: pointer; font-size: 14px; font-weight: 500; border: 1px solid #e0e0e0; display: flex; align-items: center; gap: 10px; transition: background 0.15s; }
-/* SEKVENS: Styler de klikbare gruppe-rækker.
-   cursor: pointer — musen bliver til en hånd (viser at det er klikbart).
-   transition: background 0.15s — baggrundsfarve skifter glat over 0.15 sekunder ved hover.
-   display: flex + align-items: center — indhold er lodret centreret i rækken.
-   EFFEKT I APPEN: De hvide klikbare rækker med gruppenavne. */
+/* Sekvens: Klikbare gruppe-raekker er hvide med haand-cursor */
 
 .group-row:hover { background: #f0f4ff; }
-/* SEKVENS: Når musen holdes over en gruppe-række skifter baggrunden til lys blå.
-   :hover er en pseudo-klasse der aktiveres automatisk ved museover.
-   EFFEKT I APPEN: Den blå highlight-effekt der sker når du holder musen over en gruppe-række. */
+/* Sekvens: Gruppe-raekken faar blaa baggrund naar musen holder over den */
 
 .group-row.dashed { border: 2px dashed #ccc; color: #aaa; justify-content: center; background: transparent; }
-/* FORGRENING (CSS): KUN gruppe-rækker med BÅDE "group-row" OG "dashed" klassen får dette udseende.
-   border: 2px dashed — stiplet kant.
-   color: #aaa — grå tekst.
-   background: transparent — ingen baggrund.
-   EFFEKT I APPEN: Den stiplede "＋ Opret ny gruppe"-knap nederst i gruppe-listen. */
+/* Forgrening: HVIS gruppe-raekken har klassen dashed, SÅ faar den stiplet kant og graa farve */
 
 .group-row.dashed:hover { border-color: #5b7fff; color: #5b7fff; background: #eef1ff; }
-/* SEKVENS: Hover-effekt på den stiplede knap — alt bliver blåt.
-   EFFEKT I APPEN: "＋ Opret ny gruppe"-boksen lyser blå op når musen holder over den. */
+/* Sekvens: Den stiplede boks bliver blaa naar musen holder over den */
 
 .row-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-/* SEKVENS: Flex-container der skubber sine to børne-elementer til hver sin side.
-   justify-content: space-between — første element til venstre, sidste element til højre.
-   EFFEKT I APPEN: "Mine grupper" sidder til venstre og "+ Opret gruppe"-knappen til højre på samme linje. */
+/* Sekvens: Placer to elementer - et til venstre og et til hojre */
 
-/* ---- KANBAN BOARD ---- */
 .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: start; }
-/* SEKVENS: 3-kolonne CSS-grid til kanban-boardet.
-   align-items: start — kolonnerne starter fra toppen i stedet for at strække sig.
-   EFFEKT I APPEN: De tre kanban-kolonner "To do", "I gang", "Færdig" vises side om side. */
+/* Sekvens: Kanban-boardet har 3 kolonner ved siden af hinanden */
 
 .col { background: #efefeb; border-radius: 14px; padding: 14px; min-height: 300px; }
-/* SEKVENS: Styler en enkelt kanban-kolonne — lys grå baggrund, afrundede hjørner, min. 300px høj.
-   EFFEKT I APPEN: De tre grå kolonner der indeholder opgavekortene. */
+/* Sekvens: En kanban-kolonne er lysegraa med afrundede hjoerner */
 
 .col.drag-over { background: #dde5ff; border: 2px dashed #5b7fff; }
-/* FORGRENING (CSS): KUN kolonner med "drag-over"-klassen (tilføjet af JavaScript under drag) får blå styling.
-   EFFEKT I APPEN: Kolonnen lyser blå op med stiplet kant når du trækker et kort hen over den. */
+/* Forgrening: HVIS kolonnen har klassen drag-over (sat af JavaScript), SÅ faar den blaa farve */
 
 .col-head { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 14px; margin-bottom: 12px; }
-/* SEKVENS: Styler header-linjen øverst i hver kolonne — flex-layout, fed tekst, 12px under.
-   EFFEKT I APPEN: Rækken med "⬜ To do", tæller-tallet og +-knappen øverst i kolonnen. */
+/* Sekvens: Toppen af kolonnen med navn, taeller og plus-knap */
 
 .col-head button { margin-left: auto; background: none; border: none; font-size: 18px; cursor: pointer; color: #888; }
-/* SEKVENS: Styler +-knappen i kolonne-headeren.
-   margin-left: auto — skubber knappen helt til højre.
-   background: none + border: none — ingen baggrund eller kant, ser ikke ud som en normal knap.
-   EFFEKT I APPEN: Den lille grå "＋" øverst til højre i hver kolonne. */
+/* Sekvens: Plus-knappen i kolonnen er graa og skubbet til hojre */
 
 .col-head button:hover { color: #5b7fff; }
-/* SEKVENS: Gør +-knappen i kolonnen blå ved hover.
-   EFFEKT I APPEN: "＋" skifter fra grå til blå når musen holder over den. */
+/* Sekvens: Plus-knappen bliver blaa ved hover */
 
 .count { background: white; border-radius: 20px; padding: 1px 8px; font-size: 12px; color: #888; border: 1px solid #ddd; }
-/* SEKVENS: Styler tæller-elementet — lille hvid pille-form med grå tal og kant.
-   EFFEKT I APPEN: Det lille hvide tal (fx "3") der viser antal opgaver i kolonnen. */
+/* Sekvens: Det lille tal der viser antal opgaver i kolonnen */
 
 .task { background: white; border-radius: 10px; padding: 12px; margin-bottom: 8px; border: 1px solid #e0e0e0; cursor: grab; font-size: 14px; font-weight: 500; }
-/* SEKVENS: Styler et opgavekort.
-   cursor: grab — musen skifter til en "grib"-hånd, signalerer at kortet kan trækkes.
-   EFFEKT I APPEN: De hvide afrundede kort med opgavetitler inde i kolonnerne. */
+/* Sekvens: Et opgavekort er hvidt med grab-cursor saa man kan traekke det */
 
 .task:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-/* SEKVENS: Tilføjer en skygge under opgavekortet ved hover.
-   EFFEKT I APPEN: Kortet "løfter sig" visuelt med en skygge når musen er over det. */
+/* Sekvens: Opgavekortet faar en skygge naar musen holder over det */
 
 .task.dragging { opacity: 0.4; }
-/* FORGRENING (CSS): KUN opgavekort med "dragging"-klassen (sat af JavaScript) gøres halvt gennemsigtige.
-   opacity: 0.4 = 40% synlighed.
-   EFFEKT I APPEN: Det kort du trækker bliver halvt usynligt mens du trækker det. */
+/* Forgrening: HVIS opgavekortet har klassen dragging (sat af JavaScript), SÅ bliver det halvt gennemsigtigt */
 
 .task-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 12px; color: #888; }
-/* SEKVENS: Styler bundlinjen på et opgavekort — flex med elementer spredt til hver side.
-   EFFEKT I APPEN: Den lille linje under opgavens titel med person til venstre, dato og 🗑 til højre. */
+/* Sekvens: Bunden af opgavekortet med person, dato og slet-knap */
 
 .slet { background: none; border: none; cursor: pointer; font-size: 14px; padding: 0; color: #ccc; margin-left: 6px; }
-/* SEKVENS: Styler slet-knappen (🗑) — ingen baggrund, ingen kant, lysegrå.
-   EFFEKT I APPEN: Det lille diskrete 🗑 ikon på hvert opgavekort. */
+/* Sekvens: Skraldespands-ikonet er diskret og lysegraat */
 
 .slet:hover { color: #ff6b6b; background: none; }
-/* SEKVENS: Gør 🗑 ikonet rødt ved hover.
-   EFFEKT I APPEN: Ikonet skifter fra grå til rød, som en advarsel om at det sletter noget. */
+/* Sekvens: Skraldespanden bliver roed ved hover som en advarsel */
 
-/* ---- BADGES (STATUS-MÆRKER) ---- */
 .badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; white-space: nowrap; }
-/* SEKVENS: Grundstyling for alle status-mærker — pille-form, meget lille fed tekst.
-   white-space: nowrap — teksten må aldrig brydes over to linjer.
-   EFFEKT I APPEN: Formen på alle farvede mærker som "Haster", "På sporet", "9. maj". */
+/* Sekvens: Grundform for alle status-maerker - pille-form med fed tekst */
 
-.badge.red { background: #fff0f0; color: #ff6b6b; }
-/* FORGRENING (CSS): KUN badges med klassen "red" får rød styling.
-   EFFEKT I APPEN: "Haster"-mærket og røde dato-mærker vises med rød tekst på lys rød baggrund. */
+.badge.red    { background: #fff0f0; color: #ff6b6b; }
+/* Forgrening: HVIS badge har klassen red, SÅ faar den roed farve */
 
 .badge.yellow { background: #fff8ee; color: #f4a63a; }
-/* FORGRENING (CSS): KUN badges med klassen "yellow" får gul/orange styling.
-   EFFEKT I APPEN: "Ny gruppe"-mærket og gule datoer. */
+/* Forgrening: HVIS badge har klassen yellow, SÅ faar den gul farve */
 
-.badge.green { background: #f0fff8; color: #43c98e; }
-/* FORGRENING (CSS): KUN badges med klassen "green" får grøn styling.
-   EFFEKT I APPEN: "På sporet"- og "✓"-mærker på færdige opgaver. */
+.badge.green  { background: #f0fff8; color: #43c98e; }
+/* Forgrening: HVIS badge har klassen green, SÅ faar den groen farve */
 
-/* ---- INPUTS OG KNAPPER ---- */
 input { display: block; width: 100%; padding: 10px 14px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; margin-bottom: 12px; outline: none; }
-/* SEKVENS: Grundstyling for alle inputfelter på siden.
-   display: block + width: 100% — feltet fylder hele bredden.
-   outline: none — fjerner browserens standard blå fokusramme (erstattes af vores egen nedenfor).
-   EFFEKT I APPEN: Alle tekstfelter i login og i popup-vinduer ser ens og pæne ud. */
+/* Sekvens: Alle inputfelter er fuldt brede med afrundede hjoerner */
 
 input:focus { border-color: #5b7fff; }
-/* SEKVENS: Ændrer kantfarven til blå når inputfeltet er aktivt (klikket på / i gang med at skrive).
-   :focus aktiveres automatisk af browseren når feltet er valgt.
-   EFFEKT I APPEN: En blå kant vises rundt om det inputfelt du er ved at skrive i. */
+/* Sekvens: Inputfeltet faar blaa kant naar man klikker paa det */
 
 button { padding: 10px 18px; background: #5b7fff; color: white; border: none; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; }
-/* SEKVENS: Grundstyling for ALLE knapper på siden.
-   background: #5b7fff — blå baggrund.
-   color: white — hvid tekst.
-   border-radius: 20px — meget afrundede hjørner (pille-form).
-   EFFEKT I APPEN: Alle standard-knapper er blå piller med hvid fed tekst. */
+/* Sekvens: Alle knapper er blaa piller med hvid tekst */
 
 button:hover { background: #4a6eee; }
-/* SEKVENS: Gør knapper lidt mørkere blå ved hover.
-   EFFEKT I APPEN: Knapper bliver lidt mørkere når musen holder over dem — visuel feedback. */
+/* Sekvens: Knapper bliver moerkere blaa ved hover */
 
 button.outline { background: white; color: #555; border: 1.5px solid #ddd; }
-/* FORGRENING (CSS): KUN knapper med klassen "outline" overskriver standard blå styling.
-   Hvid baggrund, grå tekst, grå kant.
-   EFFEKT I APPEN: "Annuller"-knapperne i popup-vinduerne er hvide i stedet for blå. */
+/* Forgrening: HVIS knappen har klassen outline, SÅ er den hvid med graa kant i stedet */
 
 button.outline:hover { background: #f5f5f5; }
-/* SEKVENS: Gør outline-knapper let grå ved hover.
-   EFFEKT I APPEN: "Annuller"-knapper bliver let grå ved hover. */
+/* Sekvens: Outline-knapper bliver let graa ved hover */
 
 button.danger { background: #fff0f0; color: #ff6b6b; border: 1.5px solid #ffd6d6; }
-/* FORGRENING (CSS): KUN knapper med klassen "danger" overskriver standard-styling.
-   Lys rød baggrund, rød tekst, rød kant.
-   EFFEKT I APPEN: "Forlad gruppe"-knappen i navbaren og "Ja, forlad" i popup-vinduet er røde. */
+/* Forgrening: HVIS knappen har klassen danger, SÅ er den roed - bruges til farlige handlinger */
 
 button.danger:hover { background: #ffe0e0; }
-/* SEKVENS: Gør danger-knapper lidt mørkere røde ved hover.
-   EFFEKT I APPEN: Hover-effekten på den røde "Forlad gruppe"-knap. */
+/* Sekvens: Danger-knapper bliver moerkere roede ved hover */
 
-/* ---- MODALER (POPUP-VINDUER) ---- */
 .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 100; }
-/* SEKVENS: Styler det mørke lag bag popup-vinduer.
-   position: fixed — låst til skærmen, bevæger sig ikke når man scroller.
-   inset: 0 — dækker hele skærmen (top/right/bottom/left alle = 0).
-   background: rgba(0,0,0,0.3) — sort med 30% gennemsigtighed.
-   z-index: 100 — lægger sig oven på alt andet indhold.
-   EFFEKT I APPEN: Det mørke halvgennemsigtige lag der lægger sig over hele siden når en modal åbnes. */
+/* Sekvens: Det moerke lag bag popup-vinduer - daekker hele skaermen */
 
 .overlay.hidden { display: none; }
-/* FORGRENING (CSS): KUN overlays med "hidden"-klassen skjules helt.
-   EFFEKT I APPEN: Alle popup-vinduer er usynlige som standard.
-   JavaScript fjerner "hidden" for at vise dem og tilføjer den igen for at lukke. */
+/* Forgrening: HVIS overlay har klassen hidden, SÅ er popup-vinduet skjult */
 
 .modal { background: white; padding: 32px; border-radius: 20px; width: 420px; max-width: 95vw; box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
-/* SEKVENS: Styler selve popup-boksen (den hvide boks inde i det mørke overlay).
-   max-width: 95vw — på mobiltelefoner fylder den max 95% af skærmbredden.
-   EFFEKT I APPEN: Den hvide afrundede boks der dukker op midt på skærmen. */
+/* Sekvens: Den hvide popup-boks med afrundede hjoerner og skygge */
 
 .modal h3 { font-size: 20px; margin-bottom: 16px; }
-/* SEKVENS: Styler overskriften inde i popup-vinduer — 20px stor med 16px under.
-   EFFEKT I APPEN: Titler som "Opret gruppe" og "Tilføj opgave" øverst i popup-vinduerne. */
+/* Sekvens: Overskriften i popup-vinduet er stor */
 
 .modal p { font-size: 14px; color: #666; margin-bottom: 16px; }
-/* SEKVENS: Styler brødtekst inde i popup-vinduer — lille, grå.
-   EFFEKT I APPEN: Teksten "Er du sikker? Du mister adgang..." i "Forlad gruppe"-vinduet. */
+/* Sekvens: Tekst i popup-vinduer er graa og lille */
 
 .modal-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
-/* SEKVENS: Placerer knapperne i bunden af popup-vinduer i en vandret række til højre.
-   justify-content: flex-end — skubber knapperne til højre side.
-   EFFEKT I APPEN: "Annuller" og "Opret ✓" knapperne sidder til højre i popup-vinduerne. */
+/* Sekvens: Knapperne i popup-vinduet sidder til hojre */
 
-/* ---- CHAT ---- */
 .chat-btn { position: fixed; bottom: 24px; right: 24px; width: 52px; height: 52px; border-radius: 50%; font-size: 22px; padding: 0; box-shadow: 0 4px 16px rgba(91,127,255,0.4); }
-/* SEKVENS: Styler den svævende chat-knap.
-   position: fixed — låst til skærmen, svæver altid samme sted.
-   bottom: 24px + right: 24px — placeret 24px fra bund og højre hjørne.
-   border-radius: 50% — fuldstændig rund knap.
-   EFFEKT I APPEN: Den runde blå 💬-knap der altid svæver i hjørnet af kanban-siden. */
+/* Sekvens: Den runde chat-knap sidder fast i hojre hjorne af skaermen */
 
 .chat-box { position: fixed; bottom: 88px; right: 24px; width: 300px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); border: 1px solid #e0e0e0; display: none; flex-direction: column; }
-/* SEKVENS: Styler chat-vinduet — fast position 88px fra bunden (oven over chat-knappen), 300px bredt.
-   display: none — chat-vinduet er som standard skjult.
-   EFFEKT I APPEN: Chat-vinduet eksisterer men er usynligt til JavaScript åbner det. */
+/* Sekvens: Chat-vinduet sidder over chat-knappen og er skjult som standard */
 
 .chat-box.open { display: flex; }
-/* FORGRENING (CSS): KUN chat-bokse med "open"-klassen (tilføjet af JavaScript) vises.
-   EFFEKT I APPEN: Når du trykker 💬 tilføjer JavaScript "open" og chat-vinduet dukker op. */
+/* Forgrening: HVIS chat-boksen har klassen open (sat af JavaScript), SÅ vises den */
 
 .chat-msgs { padding: 14px; height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-/* SEKVENS: Styler besked-området inde i chatten.
-   height: 200px — fast højde.
-   overflow-y: auto — scroll vises automatisk hvis der er mange beskeder.
-   flex-direction: column — beskeder stables lodret.
-   EFFEKT I APPEN: Besked-området inde i chat-vinduet med scroll hvis der er mange beskeder. */
+/* Sekvens: Besked-omraadet er 200px hoejt og scroller hvis der er mange beskeder */
 
 .msg { font-size: 13px; padding: 6px 10px; border-radius: 10px; max-width: 85%; }
-/* SEKVENS: Grundstyling for en chat-besked — afrundede hjørner, max 85% bred.
-   EFFEKT I APPEN: Formen på alle chat-bobler. */
+/* Sekvens: En chat-besked er afrundet og max 85% bred */
 
 .msg.other { background: #f0f0f0; align-self: flex-start; }
-/* FORGRENING (CSS): KUN beskeder med klassen "other" (andres beskeder) er grå og til venstre.
-   align-self: flex-start — placerer boksen til venstre i flex-kolonnen.
-   EFFEKT I APPEN: Ayas beskeder er grå bobler til venstre. */
+/* Forgrening: HVIS beskeden har klassen other, SÅ er den graa og til venstre - andres beskeder */
 
 .msg.me { background: #5b7fff; color: white; align-self: flex-end; }
-/* FORGRENING (CSS): KUN beskeder med klassen "me" (dine egne beskeder) er blå og til højre.
-   align-self: flex-end — placerer boksen til højre.
-   EFFEKT I APPEN: Dine egne beskeder er blå bobler til højre. */
+/* Forgrening: HVIS beskeden har klassen me, SÅ er den blaa og til hojre - dine beskeder */
 
 .chat-input { display: flex; gap: 8px; padding: 10px; border-top: 1px solid #eee; }
-/* SEKVENS: Styler inputrækken i bunden af chatten — vandret flex med 8px mellemrum og en streg over.
-   EFFEKT I APPEN: Rækken med tekstfeltet og send-knappen i bunden af chat-vinduet. */
+/* Sekvens: Inputraekken i bunden af chatten med tekstfelt og send-knap */
 
 .chat-input input { margin: 0; }
-/* SEKVENS: Fjerner den standard margin-bottom (12px) som alle inputs ellers har.
-   EFFEKT I APPEN: Chat-inputfeltet har ingen ekstra afstand under sig — det passer pænt i rækken. */
+/* Sekvens: Fjerner ekstra afstand under inputfeltet i chatten */
 
 .chat-input button { padding: 8px 14px; }
-/* SEKVENS: Giver send-knappen lidt mindre padding end standard-knapper.
-   EFFEKT I APPEN: Send-knappen (➤) er en smule mere kompakt end andre knapper. */
+/* Sekvens: Send-knappen i chatten er lidt mindre end normale knapper */
 
 </style>
 </head>
 <body>
-<!-- SEKVENS: Her starter det synlige indhold. Alt inde i body kan ses af brugeren.
-     EFFEKT I APPEN: Alt — login-siden, dashboard, grupper, kanban-board — er defineret herinde. -->
 
-<!-- ==========================================
-     LOGIN SIDE
-     Denne side vises som standard fordi den
-     har klassen "active" fra starten.
-     Alle andre sider har kun klassen "page"
-     og er derfor skjulte.
-========================================== -->
+<!-- LOGIN SIDE -->
 <div id="login" class="page active">
-<!-- VARIABEL (id): id="login" er som en variabel — et unikt navn JavaScript kan bruge til at finde denne side.
-     class="page active": "page" = standardstyling, "active" = denne side vises (de andre er skjulte).
-     EFFEKT I APPEN: Det første du ser er login-siden. Alle andre sider er usynlige. -->
-
+<!-- Variabel: id="login" er sidens navn som JavaScript bruger til at finde den
+     class="page active" viser denne side fordi den har active fra starten -->
   <div class="center-card">
-  <!-- SEKVENS: Starter den hvide kortboks midt på login-siden.
-       EFFEKT I APPEN: Den hvide boks med login-inputfelterne og knapper. -->
-
     <h1>🌀 GroupFlow</h1>
-    <!-- SEKVENS: Viser app-titlen som en stor h1-overskrift.
-         EFFEKT I APPEN: "🌀 GroupFlow" vises stor og fed øverst i login-boksen. -->
-
+    <!-- Sekvens: App-titlen vises stor og fed -->
     <p class="sub">Gruppearbejde gjort nemt</p>
-    <!-- SEKVENS: Et afsnit med CSS-klassen "sub" der giver det grå styling.
-         EFFEKT I APPEN: Den lille grå tekst "Gruppearbejde gjort nemt" under titlen. -->
-
+    <!-- Sekvens: Underteksten vises graa og lille -->
     <input type="email" placeholder="E-mail"/>
-    <!-- SEKVENS: Et inputfelt til e-mail. type="email" giver mobilbrugere et tastatur med @.
-         placeholder er gråt vejledningstekst der forsvinder når man begynder at skrive.
-         EFFEKT I APPEN: Det øverste inputfelt med teksten "E-mail" inde i det. -->
-
+    <!-- Sekvens: Inputfelt til e-mail - type=email giver @ paa mobilens tastatur -->
     <input type="password" placeholder="Adgangskode"/>
-    <!-- SEKVENS: Et inputfelt til adgangskode. type="password" skjuler det der skrives som prikker (••••).
-         EFFEKT I APPEN: Det andet inputfelt hvor adgangskoden vises som prikker. -->
-
+    <!-- Sekvens: Inputfelt til adgangskode - type=password skjuler teksten som prikker -->
     <button onclick="goTo('dashboard')">Log ind</button>
-    <!-- SEKVENS: En blå knap med teksten "Log ind".
-         onclick="goTo('dashboard')" — ved klik kaldes JavaScript-funktionen goTo med værdien 'dashboard'.
-         goTo-funktionen skjuler alle sider og viser kun dashboard.
-         EFFEKT I APPEN: Klik sender dig til dashboard-siden. -->
-
+    <!-- Funktion: onclick kalder funktionen goTo med parameteren 'dashboard'
+         goTo skifter siden til dashboard -->
     <button class="outline" onclick="goTo('dashboard')">Opret bruger</button>
-    <!-- SEKVENS: En hvid "Opret bruger"-knap (outline-styling).
-         Gør det samme som Log ind i denne prototype — i en rigtig app ville det oprette en konto.
-         EFFEKT I APPEN: Den hvide knap under "Log ind" — klik sender dig til dashboard. -->
-
+    <!-- Funktion: Samme som Log ind - kalder goTo med parameteren 'dashboard' -->
     <p class="link">Glemt adgangskode?</p>
-    <!-- SEKVENS: Et afsnit med klassen "link" der giver blå farve og hånd-cursor.
-         EFFEKT I APPEN: Den blå tekst "Glemt adgangskode?" — ser klikbar ud men gør intet i denne prototype. -->
-
+    <!-- Sekvens: Blaa tekst der ser klikbar ud -->
   </div>
-  <!-- SEKVENS: Afslutter den hvide center-card boks. -->
 </div>
-<!-- SEKVENS: Afslutter login-siden. -->
 
-
-<!-- ==========================================
-     DASHBOARD SIDE
-     Vises når goTo('dashboard') kaldes.
-     JavaScript tilføjer "active"-klassen til
-     denne side og fjerner den fra login.
-========================================== -->
+<!-- DASHBOARD -->
 <div id="dashboard" class="page">
-<!-- VARIABEL (id): id="dashboard" — JavaScript finder denne side med dette navn.
-     Ingen "active"-klasse her — siden er skjult til JavaScript aktiverer den.
-     EFFEKT I APPEN: Oversigts-siden med statistik, deadlines, grupper og notifikationer. -->
-
+<!-- Variabel: id="dashboard" er sidens navn - JavaScript finder den med dette navn
+     Ingen active-klasse her - siden er skjult til JavaScript aktiverer den -->
   <nav>
-  <!-- SEKVENS: Navigationsbaren øverst på dashboard-siden.
-       EFFEKT I APPEN: Den hvide bjælke øverst med logo til venstre og knapper til højre. -->
-
     <span>🌀 GroupFlow</span>
-    <!-- SEKVENS: App-logoet som en span. CSS's "margin-right: auto" på nav span skubber resten til højre.
-         EFFEKT I APPEN: "🌀 GroupFlow" sidder til venstre, knapperne er til højre. -->
-
+    <!-- Sekvens: App-logo til venstre - CSS skubber knapperne til hojre -->
     <button onclick="goTo('groups')">👥 Grupper</button>
-    <!-- SEKVENS: Knap der kalder goTo med 'groups' — skifter til gruppe-siden.
-         EFFEKT I APPEN: Klik åbner liste over dine grupper. -->
-
+    <!-- Funktion: Kalder goTo med parameteren 'groups' - skifter til gruppe-siden -->
     <button onclick="goTo('login')">🚪 Log ud</button>
-    <!-- SEKVENS: Knap der kalder goTo med 'login' — sender brugeren tilbage til login.
-         EFFEKT I APPEN: Klik logger dig ud og viser login-siden igen. -->
-
+    <!-- Funktion: Kalder goTo med parameteren 'login' - sender tilbage til login -->
   </nav>
-
   <div class="content">
-  <!-- SEKVENS: Indholdssektionen — max 860px bred og centreret.
-       EFFEKT I APPEN: Al tekst og bokse på dashboard er inde i denne container. -->
-
     <h2>Hej, Benjamin 👋</h2>
-    <!-- SEKVENS: Stor velkomsttekst. I en rigtig app ville "Benjamin" komme fra en database.
-         EFFEKT I APPEN: Den store "Hej, Benjamin 👋" øverst på dashboard. -->
-
+    <!-- Sekvens: Velkomsttekst med brugerens navn -->
     <div class="stats">
-    <!-- SEKVENS: Grid-container til statistikboksene (3 kolonner ifølge CSS).
-         EFFEKT I APPEN: De to statistikbokse vises side om side. -->
-
+      <!-- Sekvens: Grid-container til statistikboksene -->
       <div class="stat"><div class="num">3</div>Aktive grupper</div>
-      <!-- SEKVENS: En statistikboks med to dele: .num (tallet "3") og teksten "Aktive grupper".
-           EFFEKT I APPEN: Den hvide boks med det store "3" og teksten under. -->
-
+      <!-- Sekvens: Statistikboks med tallet 3 og teksten Aktive grupper -->
       <div class="stat"><div class="num">4</div>Kommende deadlines</div>
-      <!-- SEKVENS: Anden statistikboks med tallet "4".
-           EFFEKT I APPEN: Boksen med "4 Kommende deadlines". -->
-
+      <!-- Sekvens: Statistikboks med tallet 4 og teksten Kommende deadlines -->
     </div>
-    <!-- SEKVENS: Afslutter statistik-grid. -->
-
     <h3>⏰ Kommende deadlines</h3>
-    <!-- SEKVENS: En h3-underoverskrift der starter deadline-sektionen.
-         EFFEKT I APPEN: Teksten "⏰ Kommende deadlines" som en sektionsoverskrift. -->
-
+    <!-- Sekvens: Sektionsoverskrift -->
     <div class="deadline red">📌 Marketinganalyse — <b>I morgen</b> · Markedsføring A</div>
-    <!-- FORGRENING (CSS-klasse): class="deadline red" — boksen er rød fordi klassen "red" aktiverer den røde CSS-regel.
-         <b>I morgen</b> gør teksten fed.
-         EFFEKT I APPEN: Rød deadline-boks med fed "I morgen"-tekst — signalerer at den haster. -->
-
+    <!-- Forgrening: Klassen red giver roed farve - haster -->
     <div class="deadline yellow">📌 Fremlæggelse IT — <b>Om 4 dage</b> · IT & Samfund</div>
-    <!-- FORGRENING (CSS-klasse): class="deadline yellow" — boksen er gul/orange.
-         EFFEKT I APPEN: Gul deadline-boks for IT-fremlæggelsen — ikke akut, men snart. -->
-
+    <!-- Forgrening: Klassen yellow giver gul farve - snart -->
     <div class="deadline yellow">📌 Gruppekontrakt — <b>Om 6 dage</b> · Matematik</div>
-    <!-- FORGRENING (CSS-klasse): Endnu en gul deadline.
-         EFFEKT I APPEN: Anden gul deadline-boks. -->
-
+    <!-- Forgrening: Klassen yellow giver gul farve - snart -->
     <div class="deadline green">📌 Rapport del 1 — <b>Om 14 dage</b> · Markedsføring A</div>
-    <!-- FORGRENING (CSS-klasse): class="deadline green" — boksen er grøn, god tid.
-         EFFEKT I APPEN: Grøn deadline-boks — ingen stress, 14 dage tilbage. -->
-
+    <!-- Forgrening: Klassen green giver groen farve - god tid -->
     <h3>👥 Aktive grupper</h3>
-    <!-- SEKVENS: Sektionsoverskrift for grupper.
-         EFFEKT I APPEN: Teksten "👥 Aktive grupper". -->
-
+    <!-- Sekvens: Sektionsoverskrift -->
     <div class="group-row" onclick="goTo('kanban')">📊 Markedsføring A — 4 medlemmer <span class="badge red">Haster</span></div>
-    <!-- SEKVENS: En klikbar gruppe-række. onclick kalder goTo('kanban') ved klik.
-         <span class="badge red">Haster</span> — en lille rød badge-pille med teksten "Haster".
-         EFFEKT I APPEN: Klik på rækken åbner kanban-boardet. Det røde "Haster"-mærke vises til højre. -->
-
+    <!-- Funktion: onclick kalder goTo med 'kanban' - aabner kanban-boardet
+         Forgrening: badge red giver rodt Haster-maerke -->
     <div class="group-row" onclick="goTo('kanban')">💻 IT & Samfund — 3 medlemmer <span class="badge green">På sporet</span></div>
-    <!-- SEKVENS: Gruppe-række for IT & Samfund med grønt badge.
-         EFFEKT I APPEN: Klik åbner kanban. Det grønne "På sporet"-mærke viser det går godt. -->
-
+    <!-- Funktion: onclick kalder goTo med 'kanban'
+         Forgrening: badge green giver groent paa-sporet-maerke -->
     <div class="group-row" onclick="goTo('kanban')">🔢 Matematik — 5 medlemmer <span class="badge yellow">Ny gruppe</span></div>
-    <!-- SEKVENS: Gruppe-række for Matematik med gult badge.
-         EFFEKT I APPEN: Klik åbner kanban. Gult "Ny gruppe"-mærke. -->
-
+    <!-- Funktion: onclick kalder goTo med 'kanban'
+         Forgrening: badge yellow giver gult ny-gruppe-maerke -->
     <h3>🔔 Notifikationer</h3>
-    <!-- SEKVENS: Sektionsoverskrift for notifikationer.
-         EFFEKT I APPEN: Teksten "🔔 Notifikationer". -->
-
+    <!-- Sekvens: Sektionsoverskrift -->
     <div class="notif">📌 Aya har tilføjet en opgave · <span>10 min. siden</span></div>
-    <!-- SEKVENS: En notifikationsboks. <span>10 min. siden</span> — span-tagget giver tidsstemplet grå farve via CSS.
-         EFFEKT I APPEN: En hvid notifikationsboks med grå tidsstempel til højre. -->
-
+    <!-- Sekvens: Notifikationsboks - span-tagget giver tidsstemplet graa farve -->
     <div class="notif">💬 Mads: "Hvem laver intro?" · <span>1 time siden</span></div>
-    <!-- SEKVENS: Anden notifikationsboks med en chat-besked.
-         EFFEKT I APPEN: Notifikation om Mads' besked med tidsstempel. -->
-
+    <!-- Sekvens: Notifikationsboks med chat-besked -->
     <div class="notif">✅ Opgave markeret færdig · <span>3 timer siden</span></div>
-    <!-- SEKVENS: Tredje notifikationsboks om en færdig opgave.
-         EFFEKT I APPEN: Notifikation om at en opgave er markeret færdig. -->
-
+    <!-- Sekvens: Notifikationsboks om faerdig opgave -->
   </div>
-  <!-- SEKVENS: Afslutter content-sektionen. -->
 </div>
-<!-- SEKVENS: Afslutter dashboard-siden. -->
 
-
-<!-- ==========================================
-     GRUPPER SIDE
-========================================== -->
+<!-- GRUPPER -->
 <div id="groups" class="page">
-<!-- VARIABEL (id): id="groups" — JavaScript finder og viser denne side med goTo('groups').
-     EFFEKT I APPEN: Liste over alle dine grupper med mulighed for at oprette nye. -->
-
+<!-- Variabel: id="groups" er sidens navn som JavaScript bruger -->
   <nav>
-  <!-- SEKVENS: Navigationsbar for gruppe-siden.
-       EFFEKT I APPEN: Den hvide bjælke øverst med logo og knapper. -->
-
     <span>🌀 GroupFlow</span>
-    <!-- SEKVENS: App-logo til venstre — CSS's margin-right: auto skubber knapperne til højre.
-         EFFEKT I APPEN: Logoet til venstre, knapperne til højre. -->
-
+    <!-- Sekvens: App-logo -->
     <button onclick="goTo('dashboard')">🏠 Dashboard</button>
-    <!-- SEKVENS: Knap der sender til dashboard via goTo.
-         EFFEKT I APPEN: "Hjem"-knap der fører dig tilbage til oversigten. -->
-
+    <!-- Funktion: Kalder goTo med 'dashboard' - tilbage til oversigten -->
     <button onclick="goTo('login')">🚪 Log ud</button>
-    <!-- SEKVENS: Log ud-knap der sender til login.
-         EFFEKT I APPEN: Logger dig ud. -->
-
+    <!-- Funktion: Kalder goTo med 'login' - logger ud -->
   </nav>
-
   <div class="content">
-  <!-- SEKVENS: Indholdssektionen for gruppe-siden.
-       EFFEKT I APPEN: Indeholder overskrift+opret-knap, gruppe-liste og stiplet opret-boks. -->
-
     <div class="row-between">
-    <!-- SEKVENS: Flex-container der placerer sine to børne-elementer til hvert sit hjørne.
-         EFFEKT I APPEN: "Mine grupper" til venstre, "+ Opret gruppe"-knap til højre på samme linje. -->
-
+      <!-- Sekvens: Placer overskrift til venstre og knap til hojre -->
       <h2>Mine grupper</h2>
-      <!-- SEKVENS: Sidens store overskrift.
-           EFFEKT I APPEN: Teksten "Mine grupper" øverst til venstre. -->
-
+      <!-- Sekvens: Sidens store overskrift -->
       <button onclick="showModal('modal-gruppe')">+ Opret gruppe</button>
-      <!-- SEKVENS: Knap der kalder JavaScript-funktionen showModal med parameteren 'modal-gruppe'.
-           showModal fjerner "hidden"-klassen fra modal-gruppe-elementet så det vises.
-           EFFEKT I APPEN: Klik åbner popup-vinduet "Opret gruppe". -->
-
+      <!-- Funktion: Kalder showModal med parameteren 'modal-gruppe' - aabner popup-vinduet -->
     </div>
-
     <div class="group-row" onclick="goTo('kanban')">📊 Markedsføring A · Deadline: 9. maj <span class="badge red">Haster</span></div>
-    <!-- SEKVENS: Klikbar gruppe-række der åbner kanban-boardet. Rødt badge.
-         EFFEKT I APPEN: Første gruppe-række — klik åbner kanban. -->
-
+    <!-- Funktion: Kalder goTo med 'kanban' - aabner kanban
+         Forgrening: badge red giver rodt maerke -->
     <div class="group-row" onclick="goTo('kanban')">💻 IT & Samfund · Deadline: 12. maj <span class="badge green">70% færdigt</span></div>
-    <!-- SEKVENS: Gruppe-række for IT & Samfund med grønt badge.
-         EFFEKT I APPEN: Anden gruppe-række med fremgangsinfo. -->
-
+    <!-- Funktion: Kalder goTo med 'kanban'
+         Forgrening: badge green giver groent maerke -->
     <div class="group-row" onclick="goTo('kanban')">🔢 Matematik Projekt · Deadline: 14. maj <span class="badge yellow">Startet</span></div>
-    <!-- SEKVENS: Gruppe-række for Matematik med gult badge.
-         EFFEKT I APPEN: Tredje gruppe-række. -->
-
+    <!-- Funktion: Kalder goTo med 'kanban'
+         Forgrening: badge yellow giver gult maerke -->
     <div class="group-row dashed" onclick="showModal('modal-gruppe')">＋ Opret ny gruppe</div>
-    <!-- SEKVENS: Stiplet opret-knap med klassen "dashed" der giver den stiplede kant-styling.
-         onclick åbner samme modal som knappen ovenfor.
-         EFFEKT I APPEN: Den stiplede ＋-boks nederst i listen — klik åbner popup til at oprette gruppe. -->
-
+    <!-- Funktion: Kalder showModal med 'modal-gruppe' - aabner opret-popup
+         Forgrening: klassen dashed giver stiplet kant og graa farve -->
   </div>
 </div>
-<!-- SEKVENS: Afslutter gruppe-siden. -->
 
-
-<!-- ==========================================
-     KANBAN BOARD SIDE
-========================================== -->
+<!-- KANBAN -->
 <div id="kanban" class="page">
-<!-- VARIABEL (id): id="kanban" — JavaScript finder og viser denne side med goTo('kanban').
-     EFFEKT I APPEN: Opgave-boardet med tre kolonner, drag-drop og chat-knap. -->
-
+<!-- Variabel: id="kanban" er sidens navn som JavaScript bruger -->
   <nav>
-  <!-- SEKVENS: Navigationsbar for kanban-siden.
-       EFFEKT I APPEN: Bjælken øverst med tilbage-pil, gruppenavn og handlingsknapper. -->
-
     <span onclick="goTo('groups')" style="cursor:pointer;">← Grupper</span>
-    <!-- SEKVENS: En span brugt som en tilbage-knap. onclick kalder goTo('groups').
-         style="cursor:pointer" er direkte CSS i HTML — giver hånd-cursor.
-         EFFEKT I APPEN: Klik på "← Grupper" sender dig tilbage til gruppe-listen. -->
-
+    <!-- Funktion: Kalder goTo med 'groups' - tilbage til gruppe-listen -->
     <span style="margin-right:auto; margin-left:0;">📊 Markedsføring A</span>
-    <!-- SEKVENS: Gruppens navn som en span. margin-right:auto skubber resten af elementerne til højre.
-         EFFEKT I APPEN: Gruppenavnet vises i navbaren og knapperne er skubbet til højre. -->
-
+    <!-- Sekvens: Gruppens navn i navbaren - skubber knapperne til hojre -->
     <button onclick="showModal('modal-inviter')">+ Invitér</button>
-    <!-- SEKVENS: Knap der åbner invitations-popup via showModal.
-         EFFEKT I APPEN: Klik åbner popup-vinduet "Invitér medlemmer". -->
-
+    <!-- Funktion: Kalder showModal med 'modal-inviter' - aabner invitations-popup -->
     <button class="danger" onclick="showModal('modal-forlad')">Forlad gruppe</button>
-    <!-- SEKVENS: Rød knap (class="danger") der åbner bekræftelsespopup.
-         EFFEKT I APPEN: Den røde "Forlad gruppe"-knap — klik åbner en "Er du sikker?"-dialog. -->
-
+    <!-- Funktion: Kalder showModal med 'modal-forlad' - aabner bekraeftelses-popup
+         Forgrening: klassen danger giver roed farve -->
   </nav>
-
   <div class="content">
-  <!-- SEKVENS: Indholdssektionen der holder de tre kanban-kolonner.
-       EFFEKT I APPEN: Containeren de tre kolonner befinder sig i. -->
-
     <div class="board">
-    <!-- SEKVENS: Grid-container med 3 kolonner ifølge CSS.
-         EFFEKT I APPEN: De tre kolonner "To do", "I gang", "Færdig" vises side om side. -->
+      <!-- Sekvens: Grid-container med 3 kolonner -->
 
-      <!-- ---- KOLONNE: TO DO ---- -->
+      <!-- KOLONNE: TO DO -->
       <div class="col" id="col-todo" ondragover="dragOver(event)" ondrop="drop(event,'todo')" ondragleave="dragLeave(event)">
-      <!-- VARIABEL (id): id="col-todo" — JavaScript bruger dette navn til at finde kolonnen.
-           ondragover="dragOver(event)" — mens et kort holdes over kolonnen, kald dragOver-funktionen.
-           ondrop="drop(event,'todo')" — når et kort slippes her, kald drop-funktionen med kolonnenavnet 'todo'.
-           ondragleave="dragLeave(event)" — når et kort forlader kolonnen, kald dragLeave.
-           EFFEKT I APPEN: Denne kolonne kan modtage kort der trækkes ind i den. -->
-
+      <!-- Variabel: id="col-todo" bruges af JavaScript til at finde kolonnen
+           Funktion: ondragover kalder dragOver naar et kort holdes over kolonnen
+           Funktion: ondrop kalder drop med parameteren 'todo' naar et kort slippes her
+           Funktion: ondragleave kalder dragLeave naar et kort forlader kolonnen -->
         <div class="col-head">⬜ To do
-        <!-- SEKVENS: Header-rækken øverst i kolonnen med emoji og kolonnenavn.
-             EFFEKT I APPEN: Teksten "⬜ To do" øverst i kolonnen. -->
-
           <span class="count" id="cnt-todo">3</span>
-          <!-- VARIABEL (id): id="cnt-todo" — JavaScript's opdaterTæller-funktion opdaterer dette tals indhold.
-               Starter med "3" fordi der er 3 hardcodede kort.
-               EFFEKT I APPEN: Den lille hvide pille med tallet "3" der viser antal opgaver i kolonnen. -->
-
+          <!-- Variabel: id="cnt-todo" bruges af JavaScript til at opdatere dette tal -->
           <button onclick="addTask('todo')">＋</button>
-          <!-- SEKVENS: Kalder addTask-funktionen med kolonnenavnet 'todo' som parameter.
-               addTask sætter det skjulte felt og åbner popup-vinduet til at tilføje en opgave.
-               EFFEKT I APPEN: Klik åbner "Tilføj opgave"-popup og ny opgave havner i "To do". -->
-
+          <!-- Funktion: Kalder addTask med parameteren 'todo' - ny opgave i To do -->
         </div>
-
         <div id="cards-todo">
-        <!-- VARIABEL (id): id="cards-todo" — JavaScript's drop og confirmTask bruger dette til at
-             tilføje og flytte kort ind i denne kolonne.
-             EFFEKT I APPEN: Kortholderen inde i "To do"-kolonnen — alt herinde er To do-kort. -->
-
+        <!-- Variabel: id="cards-todo" bruges af JavaScript til at tilfoeje kort her -->
           <div class="task" draggable="true" ondragstart="dragStart(event)">Skriv indledning
-          <!-- SEKVENS: Et opgavekort. draggable="true" tillader at det kan trækkes rundt.
-               ondragstart="dragStart(event)" — ved drag-start, kald dragStart-funktionen.
-               EFFEKT I APPEN: Det første hvide kort i "To do"-kolonnen. Du kan trække det til en anden kolonne. -->
-
+          <!-- Sekvens: Et opgavekort der kan traekkes - draggable=true tillader drag
+               Funktion: ondragstart kalder dragStart naar man begynder at traekke -->
             <div class="task-foot">
-            <!-- SEKVENS: Bundlinjen på kortet med person, dato og slet-knap.
-                 EFFEKT I APPEN: Den lille grå linje under opgavens titel. -->
-
               <span>Benjamin</span>
-              <!-- SEKVENS: Ansvarlig person vises til venstre.
-                   EFFEKT I APPEN: "Benjamin" vises i bunden til venstre på kortet. -->
-
+              <!-- Sekvens: Ansvarlig person -->
               <span class="badge red">9. maj</span>
-              <!-- FORGRENING (CSS-klasse): Rød badge fordi datoen er tæt på (rød = haster).
-                   EFFEKT I APPEN: Rød "9. maj"-pille til højre på kortet. -->
-
+              <!-- Forgrening: badge red giver roed dato-pille -->
               <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- SEKVENS: Slet-knap. onclick="sletOpgave(this)" kalder sletOpgave-funktionen.
-                   "this" er et særligt ord i JavaScript der refererer til det element onclick sidder på — altså denne knap.
-                   sletOpgave bruger knappen til at finde det overordnede kort og slette det.
-                   EFFEKT I APPEN: Klik på 🗑 sletter dette opgavekort fra boardet. -->
-
+              <!-- Funktion: Kalder sletOpgave med this - this er denne knap
+                   JavaScript bruger knappen til at finde og slette hele kortet -->
             </div>
           </div>
-          <!-- SEKVENS: Afslutter det første opgavekort. -->
-
           <div class="task" draggable="true" ondragstart="dragStart(event)">Find statistikker
-          <!-- SEKVENS: Andet opgavekort der kan trækkes.
-               EFFEKT I APPEN: Det andet hvide kort i "To do". -->
-
+          <!-- Sekvens: Andet opgavekort der kan traekkes -->
             <div class="task-foot">
-            <!-- SEKVENS: Bundlinjen på kortet.
-                 EFFEKT I APPEN: Person, dato og slet-ikon i bunden. -->
-
               <span>Aya</span>
-              <!-- SEKVENS: Ansvarlig person.
-                   EFFEKT I APPEN: "Aya" vises i bunden til venstre. -->
-
+              <!-- Sekvens: Ansvarlig person -->
               <span class="badge yellow">12. maj</span>
-              <!-- FORGRENING (CSS-klasse): Gul badge — snart men ikke akut.
-                   EFFEKT I APPEN: Gul "12. maj"-pille. -->
-
+              <!-- Forgrening: badge yellow giver gul dato-pille -->
               <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- SEKVENS: Slet-knap der sender sig selv (this) til sletOpgave.
-                   EFFEKT I APPEN: Klik sletter "Find statistikker"-kortet. -->
-
+              <!-- Funktion: Kalder sletOpgave med this for at slette dette kort -->
             </div>
           </div>
-          <!-- SEKVENS: Afslutter andet opgavekort. -->
-
           <div class="task" draggable="true" ondragstart="dragStart(event)">Udform konklusion
-          <!-- SEKVENS: Tredje opgavekort.
-               EFFEKT I APPEN: Det tredje hvide kort i "To do". -->
-
+          <!-- Sekvens: Tredje opgavekort der kan traekkes -->
             <div class="task-foot">
-            <!-- SEKVENS: Bundlinjen.
-                 EFFEKT I APPEN: Person, dato og slet-ikon. -->
-
               <span>Mikkel</span>
-              <!-- SEKVENS: Ansvarlig person.
-                   EFFEKT I APPEN: "Mikkel" i bunden til venstre. -->
-
+              <!-- Sekvens: Ansvarlig person -->
               <span class="badge green">14. maj</span>
-              <!-- FORGRENING (CSS-klasse): Grøn badge — god tid tilbage.
-                   EFFEKT I APPEN: Grøn "14. maj"-pille. -->
-
+              <!-- Forgrening: badge green giver groen dato-pille -->
               <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- SEKVENS: Slet-knap.
-                   EFFEKT I APPEN: Klik sletter "Udform konklusion"-kortet. -->
-
+              <!-- Funktion: Kalder sletOpgave med this for at slette dette kort -->
             </div>
           </div>
-          <!-- SEKVENS: Afslutter tredje opgavekort. -->
-
         </div>
-        <!-- SEKVENS: Afslutter cards-todo kortholderen. -->
       </div>
-      <!-- SEKVENS: Afslutter "To do"-kolonnen. -->
 
-
-      <!-- ---- KOLONNE: I GANG ---- -->
+      <!-- KOLONNE: I GANG -->
       <div class="col" id="col-progress" ondragover="dragOver(event)" ondrop="drop(event,'progress')" ondragleave="dragLeave(event)">
-      <!-- VARIABEL (id): id="col-progress" — identificerer midterkolonnen.
-           ondrop sender 'progress' til drop-funktionen når et kort slippes her.
-           EFFEKT I APPEN: Den midterste kolonne der modtager kort der trækkes ind. -->
-
+      <!-- Variabel: id="col-progress" bruges af JavaScript til at finde kolonnen
+           Funktion: ondrop kalder drop med parameteren 'progress' naar kort slippes her -->
         <div class="col-head">🟡 I gang
-        <!-- SEKVENS: Header med kolonnenavn.
-             EFFEKT I APPEN: Teksten "🟡 I gang" øverst i kolonnen. -->
-
           <span class="count" id="cnt-progress">2</span>
-          <!-- VARIABEL (id): id="cnt-progress" opdateres af opdaterTæller. Starter med "2".
-               EFFEKT I APPEN: Tæller-pille der viser antal kort i "I gang". -->
-
+          <!-- Variabel: id="cnt-progress" opdateres af JavaScript -->
           <button onclick="addTask('progress')">＋</button>
-          <!-- SEKVENS: Kalder addTask med 'progress' — ny opgave havner i "I gang".
-               EFFEKT I APPEN: Klik åbner opgave-popup og ny opgave tilføjes til "I gang". -->
-
+          <!-- Funktion: Kalder addTask med parameteren 'progress' - ny opgave i I gang -->
         </div>
-
         <div id="cards-progress">
-        <!-- VARIABEL (id): id="cards-progress" — kortholderen i "I gang"-kolonnen.
-             EFFEKT I APPEN: Alle "I gang"-kort bor herinde. -->
-
+        <!-- Variabel: id="cards-progress" bruges af JavaScript til at tilfoeje kort her -->
           <div class="task" draggable="true" ondragstart="dragStart(event)">Lav SWOT-analyse
-          <!-- SEKVENS: Opgavekort i "I gang"-kolonnen.
-               EFFEKT I APPEN: Det første hvide kort i "I gang". -->
-
+          <!-- Sekvens: Opgavekort der kan traekkes -->
             <div class="task-foot">
-            <!-- SEKVENS: Bundlinjen med person, dato og slet.
-                 EFFEKT I APPEN: Info-linje i bunden af kortet. -->
-
               <span>Benjamin</span>
-              <!-- SEKVENS: Ansvarlig person.
-                   EFFEKT I APPEN: "Benjamin" til venstre i bunden. -->
-
+              <!-- Sekvens: Ansvarlig person -->
               <span class="badge red">9. maj</span>
-              <!-- FORGRENING (CSS-klasse): Rød badge — datoen er tæt på.
-                   EFFEKT I APPEN: Rød "9. maj"-pille. -->
-
+              <!-- Forgrening: badge red giver roed dato-pille -->
               <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- SEKVENS: Slet-knap.
-                   EFFEKT I APPEN: Klik sletter SWOT-analyse-kortet. -->
-
+              <!-- Funktion: Kalder sletOpgave med this -->
             </div>
           </div>
-          <!-- SEKVENS: Afslutter første kort i "I gang". -->
-
           <div class="task" draggable="true" ondragstart="dragStart(event)">Design slides
-          <!-- SEKVENS: Andet opgavekort.
-               EFFEKT I APPEN: Det andet kort i "I gang". -->
-
+          <!-- Sekvens: Andet opgavekort der kan traekkes -->
             <div class="task-foot">
-            <!-- SEKVENS: Bundlinjen.
-                 EFFEKT I APPEN: Person, dato og slet i bunden. -->
-
               <span>Aya</span>
-              <!-- SEKVENS: Ansvarlig person.
-                   EFFEKT I APPEN: "Aya" til venstre i bunden. -->
-
+              <!-- Sekvens: Ansvarlig person -->
               <span class="badge yellow">12. maj</span>
-              <!-- FORGRENING (CSS-klasse): Gul badge.
-                   EFFEKT I APPEN: Gul "12. maj"-pille. -->
-
+              <!-- Forgrening: badge yellow giver gul dato-pille -->
               <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- SEKVENS: Slet-knap.
-                   EFFEKT I APPEN: Klik sletter "Design slides"-kortet. -->
-
+              <!-- Funktion: Kalder sletOpgave med this -->
             </div>
           </div>
-          <!-- SEKVENS: Afslutter andet kort i "I gang". -->
-
         </div>
-        <!-- SEKVENS: Afslutter cards-progress kortholderen. -->
       </div>
-      <!-- SEKVENS: Afslutter "I gang"-kolonnen. -->
 
-
-      <!-- ---- KOLONNE: FÆRDIG ---- -->
+      <!-- KOLONNE: FAERDIG -->
       <div class="col" id="col-done" ondragover="dragOver(event)" ondrop="drop(event,'done')" ondragleave="dragLeave(event)">
-      <!-- VARIABEL (id): id="col-done" — identificerer "Færdig"-kolonnen.
-           ondrop sender 'done' til drop-funktionen.
-           EFFEKT I APPEN: Den højre "Færdig"-kolonne der modtager færdige opgavekort. -->
-
+      <!-- Variabel: id="col-done" bruges af JavaScript til at finde kolonnen
+           Funktion: ondrop kalder drop med parameteren 'done' naar kort slippes her -->
         <div class="col-head">✅ Færdig
-        <!-- SEKVENS: Header med kolonnenavn.
-             EFFEKT I APPEN: Teksten "✅ Færdig" øverst i kolonnen. -->
-
           <span class="count" id="cnt-done">2</span>
-          <!-- VARIABEL (id): id="cnt-done" opdateres af opdaterTæller. Starter med "2".
-               EFFEKT I APPEN: Tæller-pille der viser antal kort i "Færdig". -->
-
+          <!-- Variabel: id="cnt-done" opdateres af JavaScript -->
           <button onclick="addTask('done')">＋</button>
-          <!-- SEKVENS: Kalder addTask med 'done'.
-               EFFEKT I APPEN: Klik åbner popup og ny opgave tilføjes direkte til "Færdig". -->
-
+          <!-- Funktion: Kalder addTask med parameteren 'done' - ny opgave i Faerdig -->
         </div>
-
         <div id="cards-done">
-        <!-- VARIABEL (id): id="cards-done" — kortholderen i "Færdig"-kolonnen.
-             EFFEKT I APPEN: Alle "Færdig"-kort bor herinde. -->
-
+        <!-- Variabel: id="cards-done" bruges af JavaScript til at tilfoeje kort her -->
           <div class="task" draggable="true" ondragstart="dragStart(event)">Opret gruppe
-          <!-- SEKVENS: Færdigt opgavekort.
-               EFFEKT I APPEN: Det første hvide kort i "Færdig". -->
-
+          <!-- Sekvens: Faerdigt opgavekort der kan traekkes -->
             <div class="task-foot">
-            <!-- SEKVENS: Bundlinjen.
-                 EFFEKT I APPEN: Person og status i bunden. -->
-
               <span>Benjamin</span>
-              <!-- SEKVENS: Ansvarlig person.
-                   EFFEKT I APPEN: "Benjamin" til venstre. -->
-
+              <!-- Sekvens: Ansvarlig person -->
               <span class="badge green">✓</span>
-              <!-- FORGRENING (CSS-klasse): Grønt badge med flueben i stedet for en dato — opgaven er færdig.
-                   EFFEKT I APPEN: Det grønne "✓"-mærke i stedet for en deadline. -->
-
+              <!-- Forgrening: badge green giver groent flueben - opgaven er faerdig -->
               <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- SEKVENS: Slet-knap.
-                   EFFEKT I APPEN: Klik sletter "Opret gruppe"-kortet. -->
-
+              <!-- Funktion: Kalder sletOpgave med this -->
             </div>
           </div>
-          <!-- SEKVENS: Afslutter første færdige kort. -->
-
           <div class="task" draggable="true" ondragstart="dragStart(event)">Fordel opgaver
-          <!-- SEKVENS: Andet færdigt opgavekort.
-               EFFEKT I APPEN: Det andet hvide kort i "Færdig". -->
-
+          <!-- Sekvens: Andet faerdigt opgavekort -->
             <div class="task-foot">
-            <!-- SEKVENS: Bundlinjen.
-                 EFFEKT I APPEN: Person og status i bunden. -->
-
               <span>Aya</span>
-              <!-- SEKVENS: Ansvarlig person.
-                   EFFEKT I APPEN: "Aya" til venstre. -->
-
+              <!-- Sekvens: Ansvarlig person -->
               <span class="badge green">✓</span>
-              <!-- FORGRENING (CSS-klasse): Grønt flueben — færdig.
-                   EFFEKT I APPEN: Det grønne "✓"-mærke. -->
-
+              <!-- Forgrening: badge green giver groent flueben -->
               <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- SEKVENS: Slet-knap.
-                   EFFEKT I APPEN: Klik sletter "Fordel opgaver"-kortet. -->
-
+              <!-- Funktion: Kalder sletOpgave med this -->
             </div>
           </div>
-          <!-- SEKVENS: Afslutter andet færdige kort. -->
-
         </div>
-        <!-- SEKVENS: Afslutter cards-done kortholderen. -->
       </div>
-      <!-- SEKVENS: Afslutter "Færdig"-kolonnen. -->
 
     </div>
-    <!-- SEKVENS: Afslutter board-grid'en med de tre kolonner. -->
   </div>
-  <!-- SEKVENS: Afslutter content-sektionen. -->
-
   <button class="chat-btn" onclick="toggleChat()">💬</button>
-  <!-- SEKVENS: Den svævende runde chat-knap. position:fixed i CSS låser den til hjørnet af skærmen.
-       onclick="toggleChat()" kalder toggleChat-funktionen der åbner/lukker chat-vinduet.
-       EFFEKT I APPEN: Den blå runde 💬-knap der altid svæver i hjørnet. Klik åbner/lukker chatten. -->
-
+  <!-- Funktion: Kalder toggleChat - aabner eller lukker chat-vinduet -->
   <div class="chat-box" id="chat-box">
-  <!-- VARIABEL (id): id="chat-box" — JavaScript's toggleChat bruger dette til at åbne/lukke chat.
-       CSS's "display:none" skjuler det som standard.
-       EFFEKT I APPEN: Chat-vinduet eksisterer men er skjult til du klikker 💬. -->
-
+  <!-- Variabel: id="chat-box" bruges af JavaScript til at aabne og lukke chatten -->
     <div class="chat-msgs" id="chat-msgs">
-    <!-- VARIABEL (id): id="chat-msgs" — JavaScript's sendMsg tilføjer nye beskeder hertil.
-         EFFEKT I APPEN: Området inde i chatten hvor beskederne vises. -->
-
+    <!-- Variabel: id="chat-msgs" bruges af JavaScript til at tilfoeje nye beskeder -->
       <div class="msg other"><b>Aya:</b> Hvem laver indledningen?</div>
-      <!-- FORGRENING (CSS-klasse): class="msg other" — grå boks til venstre (andres besked).
-           <b>Aya:</b> — "Aya:" er fed tekst.
-           EFFEKT I APPEN: Ayas grå beskedboks til venstre i chatten. -->
-
+      <!-- Forgrening: klassen other giver graa boks til venstre - andres besked -->
       <div class="msg me"><b>Dig:</b> Det tager jeg! 🙌</div>
-      <!-- FORGRENING (CSS-klasse): class="msg me" — blå boks til højre (din besked).
-           EFFEKT I APPEN: Din blå beskedboks til højre i chatten. -->
-
+      <!-- Forgrening: klassen me giver blaa boks til hojre - din besked -->
     </div>
-    <!-- SEKVENS: Afslutter besked-området. -->
-
     <div class="chat-input">
-    <!-- SEKVENS: Inputrækken i bunden af chatten.
-         EFFEKT I APPEN: Rækken med tekstfelt og send-knap i bunden af chat-vinduet. -->
-
+      <!-- Sekvens: Inputraekken i bunden af chatten -->
       <input id="chat-in" placeholder="Skriv besked..." onkeydown="if(event.key==='Enter') sendMsg()"/>
-      <!-- VARIABEL (id): id="chat-in" — sendMsg henter teksten fra dette felt.
-           onkeydown="if(event.key==='Enter') sendMsg()" — dette er en mini-forgrening direkte i HTML:
-           HVIS tasten der trykkes er Enter-tasten, SÅ kald sendMsg-funktionen.
-           EFFEKT I APPEN: Du kan sende en besked ved at trykke Enter i stedet for at klikke send-knappen. -->
-
+      <!-- Variabel: id="chat-in" bruges af JavaScript til at hente beskeden du skriver
+           Forgrening: HVIS Enter-tasten trykkes, SÅ kald sendMsg -->
       <button onclick="sendMsg()">➤</button>
-      <!-- SEKVENS: Send-knap der kalder sendMsg-funktionen.
-           EFFEKT I APPEN: Klik sender beskeden du har skrevet. -->
-
+      <!-- Funktion: Kalder sendMsg - sender beskeden -->
     </div>
-    <!-- SEKVENS: Afslutter chat-inputrækken. -->
   </div>
-  <!-- SEKVENS: Afslutter chat-boksen. -->
 </div>
-<!-- SEKVENS: Afslutter kanban-siden. -->
 
-
-<!-- ==========================================
-     MODALER (POPUP-VINDUER)
-     Alle modaler er SKJULTE som standard
-     via class="overlay hidden".
-     JavaScript fjerner "hidden" for at vise dem.
-========================================== -->
-
-<!-- ---- MODAL: OPRET GRUPPE ---- -->
+<!-- POPUP: OPRET GRUPPE -->
 <div id="modal-gruppe" class="overlay hidden" onclick="closeModal(event)">
-<!-- VARIABEL (id): id="modal-gruppe" — showModal og hideModal bruger dette id.
-     class="overlay hidden" — "overlay" giver det mørke lag-styling, "hidden" skjuler det.
-     onclick="closeModal(event)" — klik på det mørke lag kalder closeModal-funktionen.
-     EFFEKT I APPEN: Popup-vinduet til at oprette en gruppe. Skjult som standard. -->
-
+<!-- Variabel: id="modal-gruppe" bruges af JavaScript til at aabne og lukke dette popup
+     Forgrening: klassen hidden holder popup-vinduet skjult som standard
+     Funktion: onclick kalder closeModal - lukker popup hvis man klikker paa baggrunden -->
   <div class="modal">
-  <!-- SEKVENS: Den hvide popup-boks inde i det mørke lag.
-       EFFEKT I APPEN: Den hvide formular-boks der vises midt på skærmen. -->
-
     <h3>Opret gruppe</h3>
-    <!-- SEKVENS: Popup-vinduets overskrift.
-         EFFEKT I APPEN: Teksten "Opret gruppe" øverst i popup-vinduet. -->
-
+    <!-- Sekvens: Popup-vinduets overskrift -->
     <input type="text" placeholder="Gruppenavn"/>
-    <!-- SEKVENS: Tekstfelt til gruppens navn.
-         EFFEKT I APPEN: Feltet "Gruppenavn" i popup-vinduet. -->
-
+    <!-- Sekvens: Felt til gruppens navn -->
     <input type="text" placeholder="Fag / emne"/>
-    <!-- SEKVENS: Tekstfelt til fag eller emne.
-         EFFEKT I APPEN: Feltet "Fag / emne". -->
-
+    <!-- Sekvens: Felt til fag eller emne -->
     <input type="date"/>
-    <!-- SEKVENS: Datovælger — type="date" åbner en kalender i browseren.
-         EFFEKT I APPEN: Et datofelt med kalender-popup til at vælge deadline. -->
-
+    <!-- Sekvens: Datovælger til deadline -->
     <input type="email" placeholder="Invitér via e-mail"/>
-    <!-- SEKVENS: E-mailfelt til at invitere et gruppemedlem.
-         EFFEKT I APPEN: Feltet "Invitér via e-mail". -->
-
+    <!-- Sekvens: Felt til at invitere et gruppemedlem -->
     <div class="modal-btns">
-    <!-- SEKVENS: Flex-container der placerer knapperne til højre.
-         EFFEKT I APPEN: "Annuller" og "Opret ✓" side om side til højre. -->
-
       <button class="outline" onclick="hideModal('modal-gruppe')">Annuller</button>
-      <!-- SEKVENS: Hvid knap (outline) der kalder hideModal med 'modal-gruppe'.
-           hideModal tilføjer "hidden"-klassen igen og skjuler popup-vinduet.
-           EFFEKT I APPEN: Klik lukker popup-vinduet uden at gøre noget. -->
-
+      <!-- Funktion: Kalder hideModal med 'modal-gruppe' - lukker popup uden at gore noget -->
       <button onclick="hideModal('modal-gruppe')">Opret ✓</button>
-      <!-- SEKVENS: Blå bekræftelsesknap der lukker popup-vinduet.
-           I en rigtig app ville den gemme gruppe-data til en server.
-           EFFEKT I APPEN: Klik lukker popup-vinduet som om gruppen er oprettet. -->
-
+      <!-- Funktion: Kalder hideModal med 'modal-gruppe' - lukker popup -->
     </div>
   </div>
 </div>
-<!-- SEKVENS: Afslutter "Opret gruppe"-modalen. -->
 
-
-<!-- ---- MODAL: INVITÉR ---- -->
+<!-- POPUP: INVITER -->
 <div id="modal-inviter" class="overlay hidden" onclick="closeModal(event)">
-<!-- VARIABEL (id): id="modal-inviter" — åbnes af showModal('modal-inviter').
-     EFFEKT I APPEN: Popup-vinduet til at invitere nye gruppemedlemmer. -->
-
+<!-- Variabel: id="modal-inviter" bruges af JavaScript
+     Forgrening: klassen hidden holder popup-vinduet skjult -->
   <div class="modal">
-  <!-- SEKVENS: Den hvide popup-boks.
-       EFFEKT I APPEN: Den hvide invitations-boks. -->
-
     <h3>Invitér medlemmer</h3>
-    <!-- SEKVENS: Popup-vinduets overskrift.
-         EFFEKT I APPEN: Teksten "Invitér medlemmer". -->
-
+    <!-- Sekvens: Popup-vinduets overskrift -->
     <input type="email" placeholder="E-mail adresse"/>
-    <!-- SEKVENS: E-mailfelt til invitationens modtager.
-         EFFEKT I APPEN: Feltet "E-mail adresse". -->
-
+    <!-- Sekvens: E-mailfelt til invitationen -->
     <div class="modal-btns">
-    <!-- SEKVENS: Knap-container.
-         EFFEKT I APPEN: "Annuller" og "Send invitation" til højre. -->
-
       <button class="outline" onclick="hideModal('modal-inviter')">Annuller</button>
-      <!-- SEKVENS: Lukker popup-vinduet uden at sende noget.
-           EFFEKT I APPEN: Klik lukker popup-vinduet. -->
-
+      <!-- Funktion: Kalder hideModal med 'modal-inviter' - lukker popup -->
       <button onclick="hideModal('modal-inviter')">Send invitation ✓</button>
-      <!-- SEKVENS: Bekræftelsesknap der lukker popup-vinduet.
-           EFFEKT I APPEN: Klik lukker popup-vinduet som om invitationen er sendt. -->
-
+      <!-- Funktion: Kalder hideModal med 'modal-inviter' - lukker popup -->
     </div>
   </div>
 </div>
-<!-- SEKVENS: Afslutter invitations-modalen. -->
 
-
-<!-- ---- MODAL: FORLAD GRUPPE ---- -->
+<!-- POPUP: FORLAD GRUPPE -->
 <div id="modal-forlad" class="overlay hidden" onclick="closeModal(event)">
-<!-- VARIABEL (id): id="modal-forlad" — åbnes af showModal('modal-forlad').
-     EFFEKT I APPEN: Bekræftelsesdialog der spørger om du er sikker. -->
-
+<!-- Variabel: id="modal-forlad" bruges af JavaScript
+     Forgrening: klassen hidden holder popup-vinduet skjult -->
   <div class="modal">
-  <!-- SEKVENS: Den hvide popup-boks.
-       EFFEKT I APPEN: Advarsels-boksen. -->
-
     <h3>Forlad gruppe?</h3>
-    <!-- SEKVENS: Popup-vinduets overskrift formuleret som et spørgsmål.
-         EFFEKT I APPEN: "Forlad gruppe?" som en tydelig advarsel. -->
-
+    <!-- Sekvens: Popup-vinduets overskrift som et spoergsmaal -->
     <p>Er du sikker? Du mister adgang til alle opgaver og beskeder.</p>
-    <!-- SEKVENS: Forklaringstekst der fortæller konsekvenserne.
-         EFFEKT I APPEN: Den grå advarseltekst under overskriften. -->
-
+    <!-- Sekvens: Advarseltekst til brugeren -->
     <div class="modal-btns">
-    <!-- SEKVENS: Knap-container.
-         EFFEKT I APPEN: "Fortryd" og "Ja, forlad" til højre. -->
-
       <button class="outline" onclick="hideModal('modal-forlad')">Fortryd</button>
-      <!-- SEKVENS: Hvid knap der lukker popup-vinduet — brugeren beholder sin plads i gruppen.
-           EFFEKT I APPEN: Klik lukker popup-vinduet, du forbliver i gruppen. -->
-
+      <!-- Funktion: Kalder hideModal med 'modal-forlad' - lukker popup -->
       <button class="danger" onclick="hideModal('modal-forlad'); goTo('groups')">Ja, forlad</button>
-      <!-- SEKVENS: Rød "danger"-knap med TWO handlinger adskilt af semikolon (;):
-           1. hideModal('modal-forlad') — lukker popup-vinduet.
-           2. goTo('groups') — skifter til gruppe-siden.
-           Semikolon betyder: udfør handling 1, DEREFTER udfør handling 2.
-           EFFEKT I APPEN: Klik lukker popup-vinduet OG sender dig til gruppe-listen. -->
-
+      <!-- Funktion: Kalder hideModal med 'modal-forlad' OG goTo med 'groups'
+           Semikolon betyder: goer begge ting efter hinanden -->
     </div>
   </div>
 </div>
-<!-- SEKVENS: Afslutter "Forlad gruppe"-modalen. -->
 
-
-<!-- ---- MODAL: TILFØJ OPGAVE ---- -->
+<!-- POPUP: TILFOEJ OPGAVE -->
 <div id="modal-task" class="overlay hidden" onclick="closeModal(event)">
-<!-- VARIABEL (id): id="modal-task" — åbnes af JavaScript's addTask-funktion.
-     EFFEKT I APPEN: Popup-vinduet der vises når du klikker +-knappen i en kolonne. -->
-
+<!-- Variabel: id="modal-task" bruges af JavaScript's addTask til at aabne dette popup
+     Forgrening: klassen hidden holder popup-vinduet skjult -->
   <div class="modal">
-  <!-- SEKVENS: Den hvide popup-boks til opgaveoprettelse.
-       EFFEKT I APPEN: Formular-boksen med felter til ny opgave. -->
-
     <h3>Tilføj opgave</h3>
-    <!-- SEKVENS: Popup-vinduets overskrift.
-         EFFEKT I APPEN: Teksten "Tilføj opgave" øverst. -->
-
+    <!-- Sekvens: Popup-vinduets overskrift -->
     <input id="task-title" type="text" placeholder="Opgavetitel"/>
-    <!-- VARIABEL (id): id="task-title" — confirmTask-funktionen læser dette felts .value.
-         EFFEKT I APPEN: Feltet "Opgavetitel" — her skriver du hvad opgaven hedder. -->
-
+    <!-- Variabel: id="task-title" - JavaScript laeder titlen fra dette felt -->
     <input id="task-person" type="text" placeholder="Ansvarlig person"/>
-    <!-- VARIABEL (id): id="task-person" — confirmTask læser dette felts .value.
-         EFFEKT I APPEN: Feltet "Ansvarlig person" — her skriver du hvem der har opgaven. -->
-
+    <!-- Variabel: id="task-person" - JavaScript laeder personen fra dette felt -->
     <input id="task-date" type="date"/>
-    <!-- VARIABEL (id): id="task-date" — confirmTask læser dette felts .value.
-         EFFEKT I APPEN: Datovælgeren til opgavens deadline. -->
-
+    <!-- Variabel: id="task-date" - JavaScript laeder datoen fra dette felt -->
     <input id="task-col" type="hidden"/>
-    <!-- VARIABEL (id): id="task-col" er et SKJULT inputfelt (type="hidden" — usynligt for brugeren).
-         Det fungerer som en variabel der gemmer kolonnenavnet.
-         addTask-funktionen skriver en værdi til det, confirmTask læser den.
-         Fx: addTask('todo') skriver 'todo' i dette felt, så confirmTask ved at kortet skal i "To do".
-         EFFEKT I APPEN: Brugeren ser det ikke, men JavaScript bruger det til at huske hvilken kolonne der er valgt. -->
-
+    <!-- Variabel: id="task-col" er et skjult felt der gemmer kolonnenavnet
+         addTask skriver kolonnenavnet her, confirmTask laeder det igen -->
     <div class="modal-btns">
-    <!-- SEKVENS: Knap-container.
-         EFFEKT I APPEN: "Annuller" og "Tilføj ✓" til højre. -->
-
       <button class="outline" onclick="hideModal('modal-task')">Annuller</button>
-      <!-- SEKVENS: Lukker popup-vinduet uden at oprette en opgave.
-           EFFEKT I APPEN: Klik lukker popup-vinduet. -->
-
+      <!-- Funktion: Kalder hideModal med 'modal-task' - lukker popup -->
       <button onclick="confirmTask()">Tilføj ✓</button>
-      <!-- SEKVENS: Kalder confirmTask-funktionen der læser alle felters værdier og opretter et nyt kort.
-           EFFEKT I APPEN: Klik opretter opgavekortet og lukker popup-vinduet. -->
-
+      <!-- Funktion: Kalder confirmTask - laeder felterne og opretter et nyt opgavekort -->
     </div>
   </div>
 </div>
-<!-- SEKVENS: Afslutter "Tilføj opgave"-modalen. -->
 
-
-<!-- ==========================================
-     JAVASCRIPT — PROGRAMMETS LOGIK
-     JavaScript definerer HVAD der sker når
-     brugeren gør noget: klikker, trækker, skriver.
-     JavaScript KAN ændre HTML og CSS mens
-     appen kører — det er det der gør appen levende.
-========================================== -->
 <script>
 
-// ==========================================
 // NAVIGATION
-// Disse funktioner styrer hvilken side der vises.
-// ==========================================
-
 function goTo(sideId) {
-// FUNKTION: Her definerer vi (opretter) en funktion med navnet goTo.
-// En funktion er en samling kode der først køres NÅR den kaldes — ikke automatisk.
-// PARAMETER: sideId er en parameter — en slags variabel der kun eksisterer inde i funktionen.
-//   Parameteren modtager den værdi der sendes med ved kaldet.
-//   Eksempel: goTo('dashboard') sender tekststrengen 'dashboard' ind som sideId.
-//   Det er ligesom at sige: "Kør goTo og brug 'dashboard' som sideId".
-// EFFEKT I APPEN: Alle navigationsknapper i hele appen bruger goTo til at skifte side.
+// Funktion: goTo skifter hvilken side der vises
+// Parameter: sideId er navnet paa den side der skal vises fx 'dashboard'
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  // LØKKE: Lad os bryde denne linje ned i dele:
-  //
-  // document.querySelectorAll('.page')
-  //   — Søger i hele HTML-dokumentet og finder ALLE elementer med CSS-klassen "page".
-  //   — Resultatet er en liste (NodeList) med alle 4 sider: [login, dashboard, groups, kanban].
-  //
-  // .forEach(p => p.classList.remove('active'))
-  //   — forEach er en løkke der kører den samme kode FOR HVERT element i listen.
-  //   — p er løkkevariablen — for hvert gennemløb er p den aktuelle side.
-  //   — 1. gennemløb: p = login-siden — fjerner 'active'
-  //   — 2. gennemløb: p = dashboard-siden — fjerner 'active'
-  //   — 3. gennemløb: p = groups-siden — fjerner 'active'
-  //   — 4. gennemløb: p = kanban-siden — fjerner 'active'
-  //   — p.classList.remove('active') fjerner CSS-klassen 'active' fra den aktuelle side.
-  //   — CSS-reglen ".page.active { display: block }" gælder ikke længere → siden skjules.
-  //
-  // EFFEKT I APPEN: Alle 4 sider skjules på én gang med én løkke.
+  // Løkke: Find ALLE sider og fjern active fra dem alle - skjul alle sider
+  // forEach korer koden for hver side: fjern active fra side 1, side 2, side 3, side 4
 
   document.getElementById(sideId).classList.add('active');
-  // SEKVENS: Denne linje køres EFTER løkken ovenfor.
-  //
-  // document.getElementById(sideId)
-  //   — getElementById finder præcis det HTML-element der har id = sideId.
-  //   — Hvis sideId = 'dashboard', finder den <div id="dashboard">.
-  //
-  // .classList.add('active')
-  //   — Tilføjer CSS-klassen 'active' til det fundne element.
-  //   — CSS-reglen ".page.active { display: block }" gælder nu for denne side → den vises.
-  //
-  // EFFEKT I APPEN: Kun den ønskede side vises. Fx: goTo('dashboard') viser dashboard og skjuler alt andet.
+  // Sekvens: Find den side der hedder sideId og tilfoej active saa kun den vises
+  // Forgrening: CSS siger - HVIS en side har active, SÅ vis den
 }
 
 
-// ==========================================
-// MODALER (POPUP-VINDUER)
-// Disse tre funktioner styrer popup-vinduerne.
-// ==========================================
-
+// POPUP-VINDUER
 function showModal(id) {
-// FUNKTION: Definerer funktionen showModal der gør et popup-vindue synligt.
-// PARAMETER: id er en parameter der modtager id-teksten på den modal der skal åbnes.
-//   Eksempel: showModal('modal-gruppe') sender 'modal-gruppe' ind som id.
-// EFFEKT I APPEN: Bruges af alle "Opret gruppe"-, "Invitér"- og +-knapper til at åbne deres popup-vinduer.
+// Funktion: showModal viser et popup-vindue
+// Parameter: id er navnet paa det popup der skal aabnes fx 'modal-gruppe'
 
   document.getElementById(id).classList.remove('hidden');
-  // SEKVENS: Finder modal-elementet via id-parameteren og fjerner CSS-klassen 'hidden'.
-  //
-  // Hvad sker der?
-  //   — Før: elementet har class="overlay hidden" → CSS siger display:none → usynligt.
-  //   — Efter: elementet har class="overlay" → CSS siger display:flex → synligt!
-  //
-  // EFFEKT I APPEN: Det mørke overlay og den hvide popup-boks dukker op på skærmen.
+  // Sekvens: Find popup-vinduet og fjern hidden - saa vises det
+  // Forgrening: CSS siger - HVIS overlay har hidden, SÅ skjul det - vi fjerner hidden saa det vises
 }
 
 function hideModal(id) {
-// FUNKTION: Definerer funktionen hideModal der skjuler et popup-vindue igen.
-// PARAMETER: id modtager id-teksten på den modal der skal lukkes.
-// EFFEKT I APPEN: Bruges af alle "Annuller"- og bekræftelsesknapper i popup-vinduerne.
+// Funktion: hideModal skjuler et popup-vindue igen
+// Parameter: id er navnet paa det popup der skal lukkes
 
   document.getElementById(id).classList.add('hidden');
-  // SEKVENS: Finder modal-elementet via id og tilføjer CSS-klassen 'hidden' igen.
-  //
-  // Hvad sker der?
-  //   — Før: elementet har class="overlay" → synligt.
-  //   — Efter: elementet har class="overlay hidden" → CSS siger display:none → skjult.
-  //
-  // EFFEKT I APPEN: Popup-vinduet forsvinder og siden bag vises normalt igen.
+  // Sekvens: Find popup-vinduet og tilfoej hidden igen - saa skjules det
 }
 
 function closeModal(event) {
-// FUNKTION: Lukker en modal HVIS brugeren klikker på det mørke bag-lag (ikke på selve den hvide boks).
-// PARAMETER: event er et hændelse-objekt — det sendes automatisk fra onclick og indeholder
-//   information om klikket, bl.a. HVAD der præcist blev klikket på.
-// EFFEKT I APPEN: Giver brugeren mulighed for at lukke popup-vinduer ved at klikke ved siden af dem.
+// Funktion: closeModal lukker popup hvis man klikker paa det moerke baglag
+// Parameter: event indeholder information om klikket - hvad blev klikket paa
 
   if (event.target.classList.contains('overlay')) {
-  // FORGRENING: if-sætning — koden herinde køres KUN hvis betingelsen er sand.
-  //
-  // event.target
-  //   — Det præcise HTML-element der blev klikket på.
-  //   — Hvis du klikker på det mørke lag: event.target = overlay-div'en.
-  //   — Hvis du klikker på den hvide modal-boks: event.target = modal-div'en (eller noget inde i den).
-  //
-  // .classList.contains('overlay')
-  //   — Returnerer true HVIS det klikkede element har CSS-klassen 'overlay'.
-  //   — Returnerer false HVIS det ikke har 'overlay'-klassen.
-  //
-  // Betingelsen er sand: brugeren klikkede på det mørke lag → koden herinde køres → modal lukkes.
-  // Betingelsen er falsk: brugeren klikkede på noget inde i den hvide boks → intet sker.
-  //
-  // EFFEKT I APPEN: Klik på den hvide popup-boks lukker den IKKE. Kun klik på det mørke lag lukker den.
+  // Forgrening: HVIS det der blev klikket paa er selve baglagget (overlay)
+  //   SÅ luk popup-vinduet
+  //   ELLERS (man klikkede paa den hvide boks) goer ingenting
 
     event.target.classList.add('hidden');
-    // SEKVENS: Denne linje køres KUN hvis if-betingelsen ovenfor var sand.
-    //   Tilføjer 'hidden' til overlay-elementet der blev klikket på.
-    //   CSS siger display:none → popup-vinduet forsvinder.
-    //
-    // EFFEKT I APPEN: Klik på det mørke lag lukker popup-vinduet.
+    // Sekvens: Tilfoej hidden til baglagget - popup-vinduet forsvinder
   }
 }
 
 
-// ==========================================
-// DRAG & DROP — TRÆK OG SLIP OPGAVEKORT
-// Disse funktioner giver brugeren mulighed for
-// at trække opgavekort fra én kolonne til en anden.
-// ==========================================
-
+// DRAG AND DROP - TRAEK OG SLIP OPGAVEKORT
 let aktivKort = null;
-// VARIABEL: let opretter variablen aktivKort.
-//   let bruges (i stedet for const) fordi variablens værdi ÆNDRER sig under programmets kørsel.
-//   Startværdi: null — det betyder "intet" / "ingen værdi".
-//   Formål: Denne variabel bruges til at "huske" hvilket kort brugeren er i gang med at trække.
-//   Når du begynder at trække et kort, gemmes kortet her.
-//   Når du slipper kortet, nulstilles den til null igen.
-// EFFEKT I APPEN: Broen mellem dragStart (begynder at trække) og drop (slipper kortet).
-//   Uden denne variabel ville drop-funktionen ikke vide hvilket kort den skulle flytte.
+// Variabel: aktivKort gemmer det kort der traekkes lige nu
+// let bruges fordi vaerdien aendrer sig - starter som null (ingenting)
 
 function dragStart(event) {
-// FUNKTION: Køres automatisk i det øjeblik brugeren begynder at trække et opgavekort.
-//   Sat op via ondragstart="dragStart(event)" på hvert opgavekort i HTML.
-// PARAMETER: event er hændelse-objektet med information om drag-handlingen.
-// EFFEKT I APPEN: "Starter" drag-handlingen og gør kortet halvt gennemsigtigt.
+// Funktion: dragStart kores naar man begynder at traekke et kort
+// Parameter: event indeholder information om hvad der traekkes
 
   aktivKort = event.currentTarget;
-  // VARIABEL (tildeling): Variablen aktivKort opdateres med det kort der trækkes.
-  //
-  // event.currentTarget
-  //   — Det HTML-element der har ondragstart-handleren sat på sig.
-  //   — Det er altid selve opgavekortets <div class="task"> element.
-  //   — Ikke at forveksle med event.target der kan være et child-element man har klikket på.
-  //
-  // EFFEKT I APPEN: Nu husker programmet præcis HVILKET kort du er i gang med at trække.
-  //   drop-funktionen kan bruge aktivKort til at vide hvad den skal flytte.
+  // Variabel: Gem det kort der traekkes i aktivKort saa vi husker det til drop
 
   aktivKort.classList.add('dragging');
-  // SEKVENS: Tilføjer CSS-klassen 'dragging' til kortet der trækkes.
-  //   CSS-reglen ".task.dragging { opacity: 0.4 }" gælder nu for dette kort.
-  //   opacity: 0.4 = 40% synlighed = 60% gennemsigtigt.
-  //
-  // EFFEKT I APPEN: Det kort du trækker bliver halvt usynligt og "tonet ud" som visuel feedback.
+  // Sekvens: Tilfoej dragging til kortet
+  // Forgrening: CSS siger - HVIS kortet har dragging, SÅ goer det halvt gennemsigtigt
 }
 
 function dragOver(event) {
-// FUNKTION: Køres løbende (mange gange i sekundet) mens et kort holdes over en kolonne.
-//   Sat op via ondragover="dragOver(event)" på hver kolonne i HTML.
-// PARAMETER: event er hændelse-objektet for dragover-begivenheden.
-// EFFEKT I APPEN: Lyser kolonnen blå op og aktiverer muligheden for at droppe.
+// Funktion: dragOver kores mens et kort holdes over en kolonne
+// Parameter: event indeholder information om bevaegelsen
 
   event.preventDefault();
-  // SEKVENS: En teknisk nødvendig linje.
-  //   Normalt forhindrer browseren drop-handlinger som standard-sikkerhed.
-  //   preventDefault() ophæver denne standard-forhindring.
-  //   VIGTIGT: Uden denne linje vil drop-funktionen ALDRIG køre — den er ikke valgfri.
-  //
-  // EFFEKT I APPEN: Teknisk "tilladelse" til at kortet kan droppes her — usynlig for brugeren.
+  // Sekvens: Teknisk nodvendig linje - uden den virker drop ikke
 
   event.currentTarget.classList.add('drag-over');
-  // SEKVENS: Tilføjer 'drag-over'-klassen til den kolonne kortet holdes over.
-  //   event.currentTarget er kolonnen der har ondragover på sig.
-  //   CSS-reglen ".col.drag-over { background: #dde5ff; border: 2px dashed #5b7fff }" aktiveres.
-  //
-  // EFFEKT I APPEN: Kolonnen skifter til blå baggrund med stiplet kant som en "drop her"-indikator.
+  // Sekvens: Tilfoej drag-over til kolonnen
+  // Forgrening: CSS siger - HVIS kolonnen har drag-over, SÅ goer den blaa
 }
 
 function dragLeave(event) {
-// FUNKTION: Køres når et kort forlader en kolonne igen uden at blive sluppet.
-//   Sat op via ondragleave="dragLeave(event)" på hver kolonne.
-// PARAMETER: event er hændelse-objektet.
-// EFFEKT I APPEN: Fjerner den blå highlight fra kolonnen når kortet trækkes ud af den.
+// Funktion: dragLeave kores naar kortet forlader en kolonne igen
+// Parameter: event indeholder information om bevaegelsen
 
   event.currentTarget.classList.remove('drag-over');
-  // SEKVENS: Fjerner 'drag-over'-klassen fra kolonnen.
-  //   Den blå CSS-styling gælder ikke længere → kolonnen vender tilbage til normal grå farve.
-  //
-  // EFFEKT I APPEN: Kolonnen ser normal ud igen når kortet ikke længere er over den.
+  // Sekvens: Fjern drag-over fra kolonnen - den bliver graa igen
 }
 
 function drop(event, kolonne) {
-// FUNKTION: Køres i det øjeblik brugeren slipper et kort over en kolonne.
-//   Sat op via ondrop="drop(event,'todo')" osv. på kolonnerne.
-// PARAMETER: event er hændelse-objektet.
-// PARAMETER: kolonne er kolonnenavnet som en tekststreng ('todo', 'progress' eller 'done').
-//   Sendes direkte fra HTML — fx ondrop="drop(event,'progress')" sender 'progress'.
-// EFFEKT I APPEN: Selve flytningen af kortet — det havner i den nye kolonne.
+// Funktion: drop kores naar man slipper kortet over en kolonne
+// Parameter: event indeholder information om slipningen
+// Parameter: kolonne er navnet paa kolonnen fx 'todo', 'progress' eller 'done'
 
   event.preventDefault();
-  // SEKVENS: Samme tekniske nødvendighed som i dragOver.
-  //   Forhindrer browserens standard drop-opførsel (fx at åbne en fil som tekst).
-  //
-  // EFFEKT I APPEN: Teknisk nødvendig — sikrer at vores kode kører korrekt.
+  // Sekvens: Teknisk nodvendig linje
 
   event.currentTarget.classList.remove('drag-over');
-  // SEKVENS: Fjerner den blå 'drag-over'-klasse fra kolonnen nu kortet er droppet.
-  //
-  // EFFEKT I APPEN: Kolonnen vender tilbage til normal grå baggrund efter kortet er sluppet.
+  // Sekvens: Fjern den blaa farve fra kolonnen
 
   if (!aktivKort) return;
-  // FORGRENING: if-sætning med negations-operatoren ! (udråbstegn = "ikke").
-  //
-  // !aktivKort er sand HVIS aktivKort er null (intet kort trækkes).
-  // !aktivKort er falsk HVIS aktivKort indeholder et kort-element.
-  //
-  // return — stopper funktionen ØJEBLIKKELIGT. Ingen kode efter dette køres.
-  //
-  // Hvornår kan aktivKort være null her?
-  //   — Fx hvis en dragend-begivenhed nulstillede aktivKort, men drop alligevel udløses.
-  //   — Det er et sikkerhedstjek for at undgå fejl.
-  //
-  // EFFEKT I APPEN: Forhindrer program-fejl. Brugeren mærker ingenting.
+  // Forgrening: HVIS aktivKort er null (intet kort traekkes)
+  //   SÅ stop funktionen - der er ikke noget at flytte
 
   aktivKort.classList.remove('dragging');
-  // SEKVENS: Fjerner 'dragging'-klassen fra det kort der netop blev droppet.
-  //   CSS-reglen "opacity: 0.4" gælder ikke længere → kortet er 100% synligt igen.
-  //
-  // EFFEKT I APPEN: Kortet ser normalt ud igen — ikke halvt usynligt — efter det er droppet.
+  // Sekvens: Fjern dragging fra kortet - det er normalt igen
 
   document.getElementById('cards-' + kolonne).appendChild(aktivKort);
-  // SEKVENS: Den vigtigste linje i hele drag-drop funktionen — selve flytningen.
-  //
-  // 'cards-' + kolonne
-  //   — String-sammensætning (konkatenering). Plus (+) sætter to tekststykker sammen.
-  //   — Hvis kolonne = 'progress': 'cards-' + 'progress' = 'cards-progress'
-  //   — Hvis kolonne = 'done': 'cards-' + 'done' = 'cards-done'
-  //
-  // document.getElementById('cards-progress')
-  //   — Finder kortholderen inde i "I gang"-kolonnen.
-  //
-  // .appendChild(aktivKort)
-  //   — Tilføjer aktivKort som det SIDSTE child-element i kortholderen.
-  //   — appendChild FLYTTER elementet (det kopieres ikke — det fjernes fra sin gamle position).
-  //
-  // EFFEKT I APPEN: Kortet ryker synligt over i den nye kolonne — det forsvinder fra den gamle.
+  // Sekvens: Find kortholderen i den rigtige kolonne og flyt kortet derind
+  // 'cards-' + kolonne bliver fx 'cards-todo' eller 'cards-progress'
 
-  opdaterTæller();
-  // SEKVENS: Kalder opdaterTæller-funktionen (defineret nedenfor).
-  //   Den tæller alle kort i alle kolonner og opdaterer de små tal i headerne.
-  //
-  // EFFEKT I APPEN: Tæller-tallene øverst i kolonnerne opdateres øjeblikkeligt.
-  //   Fx: "To do" falder fra 3 til 2, "I gang" stiger fra 2 til 3.
+  opdaterTaeller();
+  // Funktion: Kald opdaterTaeller for at opdatere tallene i kolonnerne
 
   aktivKort = null;
-  // VARIABEL (nulstilling): Sætter aktivKort tilbage til null.
-  //   Rydder op — ingen kort er aktivt længere.
-  //
-  // EFFEKT I APPEN: Gør systemet klar til næste drag-drop handling.
+  // Variabel: Nulstil aktivKort til null - intet kort traekkes laengere
 }
 
 document.addEventListener('dragend', () => {
-// SEKVENS: Tilknytter en permanent hændelseslytter på hele dokumentet.
-//
-// document.addEventListener('dragend', ...)
-//   — Siger til browseren: "Lyt efter 'dragend'-begivenheder på hele dokumentet."
-//   — 'dragend' sker ALTID når en drag-handling afsluttes — uanset om der skete et drop.
-//
-// () => { ... }
-//   — En anonym arrow-funktion — en funktion uden navn der defineres og bruges på stedet.
-//   — Alt inde i { } køres hver gang dragend sker.
-//
-// Hvornår er dette nødvendigt?
-//   — Hvis brugeren slipper kortet UDENFOR alle kolonner, kører drop-funktionen ikke.
-//   — Men dragend sker altid — så vi rydder op her.
-//
-// EFFEKT I APPEN: Garanterer at appen altid ser ren og korrekt ud efter en drag-handling.
+// Sekvens: Lyt efter naar drag er slut - ryd op hvis noget gik galt
 
   document.querySelectorAll('.task').forEach(t => t.classList.remove('dragging'));
-  // LØKKE: querySelectorAll finder ALLE opgavekort (med CSS-klassen "task") i dokumentet.
-  //   forEach løber igennem dem alle — t er løkkevariablen for det aktuelle kort.
-  //   t.classList.remove('dragging') fjerner 'dragging'-klassen fra hvert enkelt kort.
-  //
-  // Resultat:
-  //   — 1. gennemløb: t = første kort → fjerner 'dragging'
-  //   — 2. gennemløb: t = andet kort → fjerner 'dragging'
-  //   — (osv. for alle kort)
-  //
-  // EFFEKT I APPEN: Alle kort er 100% synlige igen. Ingen kort sidder fast i halv-gennemsigtig tilstand.
+  // Løkke: Korer for hvert opgavekort - fjern dragging fra alle kort
 
   document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
-  // LØKKE: querySelectorAll finder ALLE kolonner (med CSS-klassen "col").
-  //   forEach løber igennem dem — c er løkkevariablen.
-  //   Fjerner 'drag-over' fra ALLE kolonner.
-  //
-  // EFFEKT I APPEN: Ingen kolonne sidder fast med blå highlight-farve.
+  // Løkke: Korer for hver kolonne - fjern drag-over fra alle kolonner
 });
 
-
-function opdaterTæller() {
-// FUNKTION: Opdaterer de små tal øverst i hver kanban-kolonne.
-//   Ingen parameter — funktionen arbejder altid med alle tre kolonner.
-// EFFEKT I APPEN: Tallene "3", "2", "2" i kolonne-headerne holder sig altid opdaterede.
+function opdaterTaeller() {
+// Funktion: Opdaterer tallene oeverst i kolonnerne
 
   ['todo', 'progress', 'done'].forEach(kol => {
-  // LØKKE: ['todo', 'progress', 'done'] er en array — en ordnet liste med tre elementer.
-  //   forEach er en løkke der kører koden inde i { } for HVERT element i listen.
-  //   kol er løkkevariablen — den skifter værdi for hvert gennemløb:
-  //   — 1. gennemløb: kol = 'todo'
-  //   — 2. gennemløb: kol = 'progress'
-  //   — 3. gennemløb: kol = 'done'
-  //
-  // EFFEKT I APPEN: Alle tre kolonner opdateres med ét stykke kode i stedet for at skrive det tre gange.
+  // Løkke: Korer 3 gange - en gang for hver kolonne
+  // 1. gang: kol = 'todo'
+  // 2. gang: kol = 'progress'
+  // 3. gang: kol = 'done'
 
     const antal = document.getElementById('cards-' + kol).querySelectorAll('.task').length;
-    // VARIABEL: const antal — const fordi værdien ikke ændres efter den er sat i dette gennemløb.
-    //
-    // 'cards-' + kol
-    //   — Sætter tekst-stykker sammen: 'cards-todo', 'cards-progress' eller 'cards-done'.
-    //
-    // document.getElementById('cards-todo')
-    //   — Finder kortholderen for den aktuelle kolonne.
-    //
-    // .querySelectorAll('.task')
-    //   — Finder alle elementer med CSS-klassen "task" INDE I kortholderen.
-    //   — Returnerer en liste med alle opgavekort i kolonnen.
-    //
-    // .length
-    //   — Giver antallet af elementer i listen som et tal (0, 1, 2, 3, ...).
-    //
-    // EFFEKT I APPEN: antal = det faktiske antal opgavekort i kolonnen lige nu.
+    // Variabel: antal gemmer hvor mange kort der er i kolonnen
+    // const fordi vaerdien ikke aendrer sig efter den er sat
 
     document.getElementById('cnt-' + kol).textContent = antal;
-    // SEKVENS: Opdaterer tæller-elementet i kolonnen.
-    //
-    // 'cnt-' + kol
-    //   — Sætter tekst-stykker sammen: 'cnt-todo', 'cnt-progress' eller 'cnt-done'.
-    //
-    // document.getElementById('cnt-todo')
-    //   — Finder det lille tæller-span i kolonnen (fx <span class="count" id="cnt-todo">3</span>).
-    //
-    // .textContent = antal
-    //   — Sætter spanets tekst-indhold til det nye tal.
-    //   — Fx: hvis antal = 4, skifter det lille tal fra "3" til "4".
-    //
-    // EFFEKT I APPEN: Det lille tal øverst i kolonnen opdateres øjeblikkeligt.
+    // Sekvens: Find taeller-elementet og opdater tallet til det rigtige antal
   });
 }
 
 
-// ==========================================
-// TILFØJ OPGAVE
-// ==========================================
-
+// TILFOEJ OPGAVE
 function addTask(kolonne) {
-// FUNKTION: Åbner popup-vinduet til at tilføje en ny opgave og husker hvilken kolonne den skal i.
-// PARAMETER: kolonne er kolonnenavnet — 'todo', 'progress' eller 'done'.
-//   Sendes fra HTML: onclick="addTask('todo')"
-// EFFEKT I APPEN: Køres når du klikker +-knappen øverst i en kolonne.
+// Funktion: Aabner popup-vinduet til at tilfoeje en ny opgave
+// Parameter: kolonne er den kolonne opgaven skal havne i fx 'todo'
 
   document.getElementById('task-col').value = kolonne;
-  // VARIABEL (HTML-felt som variabel): Det skjulte inputfelt task-col bruges som en variabel.
-  //   .value sætter feltets indhold til kolonnenavnet.
-  //
-  // Hvorfor er dette nødvendigt?
-  //   — Popup-vinduet er fælles for alle tre kolonner.
-  //   — Vi skal gemme HVILKEN kolonne der åbnede vinduet, så confirmTask ved hvor kortet skal placeres.
-  //   — Det skjulte felt fungerer som en "hukommelses-variabel" til at overføre info.
-  //
-  // EFFEKT I APPEN: Gemmer kolonnenavnet "bag kulissen" så confirmTask kan hente det.
+  // Variabel: Gem kolonnenavnet i det skjulte felt saa confirmTask ved hvor kortet skal hen
 
   document.getElementById('task-title').value = '';
-  // SEKVENS: Nulstiller titelfeltet til tomt.
-  //   Sikrer at feltet ikke indeholder tekst fra en tidligere åbning af popup-vinduet.
-  //
-  // EFFEKT I APPEN: Titelfeltet er tomt og klart til nyt input.
+  // Sekvens: Tom titelfeltet saa det er klart til nyt input
 
   document.getElementById('task-person').value = '';
-  // SEKVENS: Nulstiller personfeltet til tomt.
-  // EFFEKT I APPEN: Personfeltet er tomt og klart.
+  // Sekvens: Tom personfeltet
 
   document.getElementById('task-date').value = '';
-  // SEKVENS: Nulstiller datofeltet.
-  // EFFEKT I APPEN: Ingen dato er valgt — feltet er tomt.
+  // Sekvens: Tom datofeltet
 
   showModal('modal-task');
-  // SEKVENS: Kalder showModal-funktionen med 'modal-task'.
-  //   showModal fjerner 'hidden' fra modal-task-elementet så det vises.
-  //
-  // EFFEKT I APPEN: Popup-vinduet "Tilføj opgave" åbner med tomme felter.
+  // Funktion: Kald showModal med 'modal-task' for at aabne popup-vinduet
 }
 
 function confirmTask() {
-// FUNKTION: Læser hvad brugeren har skrevet i popup-felterne og opretter et nyt opgavekort.
-//   Ingen parameter — funktionen henter selv data fra de kendte input-elementers id'er.
-// EFFEKT I APPEN: Køres når du klikker "Tilføj ✓" i opgave-popup-vinduet.
+// Funktion: Laeder hvad brugeren har skrevet og opretter et nyt opgavekort
 
   const titel = document.getElementById('task-title').value || 'Ny opgave';
-  // VARIABEL: const titel gemmer opgavens titel.
-  //   const fordi titlen ikke ændres igen inde i denne funktion.
-  //
-  // document.getElementById('task-title').value
-  //   — .value henter det brugeren har skrevet i titelfeltet.
-  //   — Hvis feltet er tomt returnerer det en tom streng: "".
-  //
-  // || 'Ny opgave'
-  //   — || er den logiske ELLER-operator.
-  //   — Bruges her som en "standard-værdi": HVIS .value er tomt (falsy), SÅ brug 'Ny opgave'.
-  //   — En tom streng "" er "falsy" i JavaScript — testes som falsk i en || sammenhæng.
-  //
-  // Eksempel:
-  //   — Bruger skriver "Lav rapport": titel = "Lav rapport"
-  //   — Bruger skriver ingenting: titel = "Ny opgave"
-  //
-  // EFFEKT I APPEN: Opgaven får en meningsfuld titel selvom brugeren ikke skriver noget.
+  // Variabel: titel gemmer teksten fra titelfeltet
+  // Forgrening: HVIS feltet er tomt SÅ brug 'Ny opgave' i stedet
 
   const person = document.getElementById('task-person').value || '?';
-  // VARIABEL: const person gemmer den ansvarlige persons navn.
-  //   Samme logik som titel — standardværdi er '?' hvis feltet er tomt.
-  //
-  // EFFEKT I APPEN: Personen på kortet viser "?" hvis intet navn er skrevet.
+  // Variabel: person gemmer navnet fra personfeltet
+  // Forgrening: HVIS feltet er tomt SÅ brug '?' i stedet
 
   const dato = document.getElementById('task-date').value;
-  // VARIABEL: const dato gemmer den valgte dato som en tekststreng.
-  //   Format fra datovælgeren: "2025-05-09" (år-måned-dag, ISO 8601 format).
-  //   Hvis intet er valgt: dato = "" (tom streng).
-  //
-  // EFFEKT I APPEN: Gemmer den valgte deadline-dato klar til formatering nedenfor.
+  // Variabel: dato gemmer den valgte dato som tekst fx '2025-05-09'
 
   const kol = document.getElementById('task-col').value;
-  // VARIABEL: const kol gemmer kolonnenavnet fra det skjulte felt.
-  //   Dette felt blev sat af addTask-funktionen da popup-vinduet åbnede.
-  //
-  // EFFEKT I APPEN: Fortæller confirmTask hvilken kolonne det nye kort skal tilføjes i.
+  // Variabel: kol gemmer kolonnenavnet fra det skjulte felt
 
   const datoTekst = dato
     ? new Date(dato).toLocaleDateString('da-DK', { day: 'numeric', month: 'short' })
     : '—';
-  // VARIABEL + FORGRENING: const datoTekst — en ternary operator (kompakt if-else på én linje).
-  //
-  // Syntaks: betingelse ? værdi-hvis-sand : værdi-hvis-falsk
-  //
-  // dato ? ... : ...
-  //   — BETINGELSE: Er dato en ikke-tom streng?
-  //   — En ikke-tom streng som "2025-05-09" er "truthy" — betingelsen er sand.
-  //   — En tom streng "" er "falsy" — betingelsen er falsk.
-  //
-  // Hvis betingelsen er SAND (dato er valgt):
-  //   new Date(dato)
-  //     — Opretter et JavaScript Date-objekt fra ISO-strengen "2025-05-09".
-  //   .toLocaleDateString('da-DK', { day: 'numeric', month: 'short' })
-  //     — Formaterer datoen til dansk: "9. maj" (dag som tal, måned som kort tekst).
-  //     — 'da-DK' = dansk locale (sprog/format).
-  //
-  // Hvis betingelsen er FALSK (ingen dato valgt):
-  //   datoTekst = '—' (et tankestreg-tegn).
-  //
-  // EFFEKT I APPEN: Datoen på kortet vises som "9. maj" — eller "—" hvis ingen dato er valgt.
+  // Variabel: datoTekst gemmer datoen i et laesbart format fx '9. maj'
+  // Forgrening: HVIS dato ikke er tom SÅ formater den til dansk
+  //             HVIS dato er tom SÅ brug tegnet —
 
   const kort = document.createElement('div');
-  // VARIABEL: const kort gemmer et nyt, tomt HTML div-element.
-  //   document.createElement('div') opretter elementet i hukommelsen.
-  //   Det er IKKE tilføjet til siden endnu — det er bare forberedt.
-  //
-  // EFFEKT I APPEN: Et nyt tomt kortElement er klar til at blive bygget og tilføjet.
+  // Variabel: kort er et nyt tomt HTML-element der er klar til at blive bygget
 
   kort.className = 'task';
-  // SEKVENS: Sætter kortets CSS-klasse til 'task'.
-  //   Svarer til at skrive class="task" i HTML.
-  //   Alle CSS-regler for ".task" (hvid baggrund, afrundede hjørner, grab-cursor osv.) gælder nu.
-  //
-  // EFFEKT I APPEN: Det nye kort vil se ud præcis som de eksisterende kort på boardet.
+  // Sekvens: Giv kortet CSS-klassen task saa det ser ud som de andre kort
 
   kort.draggable = true;
-  // SEKVENS: Sætter JavaScript-egenskaben draggable til true.
-  //   Svarer til at skrive draggable="true" i HTML.
-  //   Nødvendigt for at HTML drag-and-drop API'en aktiveres for dette element.
-  //
-  // EFFEKT I APPEN: Det nye kort kan trækkes og flyttes ligesom de andre kort.
+  // Sekvens: Goer kortet draggbart saa det kan traekkes
 
   kort.ondragstart = dragStart;
-  // SEKVENS: Tilknytter dragStart-funktionen til kortets ondragstart-hændelse.
-  //   Svarer til at skrive ondragstart="dragStart(event)" i HTML.
-  //   Vi skriver ikke dragStart() med parenteser — det ville KALDE funktionen nu.
-  //   Vi skriver dragStart uden parenteser — det REFERERER til funktionen så den kaldes SENERE.
-  //
-  // EFFEKT I APPEN: Det nye kort reagerer på drag præcis som de eksisterende kort.
+  // Sekvens: Tilknyt dragStart-funktionen til kortet saa det reagerer paa drag
 
   kort.innerHTML = `${titel}<div class="task-foot"><span>${person}</span><span class="badge yellow">${datoTekst}</span><button class="slet" onclick="sletOpgave(this)">🗑</button></div>`;
-  // SEKVENS: Sætter kortets indre HTML-indhold.
-  //   innerHTML accepterer en HTML-streng og parser den til rigtige HTML-elementer.
-  //
-  // Template literal (backtick-streng):
-  //   — Backticks (`) bruges i stedet for normale anførselstegn.
-  //   — ${titel} — indsætter variablen titels værdi direkte i strengen.
-  //   — ${person} — indsætter variablen persons værdi.
-  //   — ${datoTekst} — indsætter den formaterede dato.
-  //
-  // Resulterende HTML for en opgave "Lav rapport" af "Mia" med dato "12. maj":
-  //   Lav rapport<div class="task-foot"><span>Mia</span><span class="badge yellow">12. maj</span><button class="slet" onclick="sletOpgave(this)">🗑</button></div>
-  //
-  // Bemærk: Nye opgaver får ALTID gul badge — farven er ikke dynamisk baseret på dato.
-  //
-  // EFFEKT I APPEN: Kortet fyldes med titel, ansvarlig person, dato og en slet-knap.
+  // Sekvens: Byg kortets indhold med titel, person, dato og slet-knap
 
   document.getElementById('cards-' + kol).appendChild(kort);
-  // SEKVENS: Tilføjer det nye kort til den rigtige kolonne.
-  //   'cards-' + kol sammensætter id-strengen (fx 'cards-todo').
-  //   getElementById finder kortholderen.
-  //   appendChild tilføjer kortet som det SIDSTE element inde i kortholderen.
-  //
-  // EFFEKT I APPEN: Det nye kort dukker op nederst i den valgte kolonne.
+  // Sekvens: Tilfoej det nye kort til den rigtige kolonne
 
-  opdaterTæller();
-  // SEKVENS: Opdaterer tæller-tallene i alle kolonner.
-  // EFFEKT I APPEN: Tæller-tallet i den kolonne det nye kort tilføjedes til stiger med 1.
+  opdaterTaeller();
+  // Funktion: Opdater tallene i kolonnerne
 
   hideModal('modal-task');
-  // SEKVENS: Lukker opgave-popup-vinduet.
-  // EFFEKT I APPEN: Popup-vinduet forsvinder og det nye kort ses nu i kolonnen.
+  // Funktion: Luk popup-vinduet
 }
 
 
-// ==========================================
 // SLET OPGAVE
-// ==========================================
-
 function sletOpgave(knap) {
-// FUNKTION: Fjerner et opgavekort fra boardet.
-// PARAMETER: knap er en reference til den 🗑-knap der blev klikket på.
-//   Sendes fra HTML via "this": onclick="sletOpgave(this)"
-//   "this" i en HTML onclick-attribut = det HTML-element der har onclick-attributten.
-//   Det er slet-knappen selv — ikke kortet.
-// EFFEKT I APPEN: Køres når du klikker 🗑 på et opgavekort.
+// Funktion: Sletter et opgavekort
+// Parameter: knap er den skraldespands-knap der blev klikket paa
 
   const kort = knap.closest('.task');
-  // VARIABEL: const kort finder det opgavekort der indeholder slet-knappen.
-  //
-  // knap.closest('.task')
-  //   — .closest() søger OPAD i HTML-træet fra det givne element.
-  //   — Det finder det nærmeste FORÆLDRRE-element med CSS-klassen "task".
-  //
-  // Hvorfor er dette nødvendigt?
-  //   — Slet-knappen (knap) er INDE I kortet — den er et barn-element.
-  //   — Vi kan ikke skrive knap.remove() — det ville kun fjerne knappen, ikke hele kortet.
-  //   — Vi skal finde forældrre-elementet (kortet) og fjerne DET.
-  //   — .closest() navigerer opad: knap → task-foot → task (fundet!).
-  //
-  // EFFEKT I APPEN: Finder præcis det rigtige opgavekort uanset hvilket kort der trykkes slet på.
+  // Variabel: kort finder det opgavekort der indeholder knappen
+  // closest soeger opad i HTML og finder det naermeste foraeldre-element med klassen task
 
   kort.remove();
-  // SEKVENS: Fjerner kortets HTML-element fra dokumentet.
-  //   .remove() sletter elementet permanent fra DOM'en (HTML-træet i hukommelsen).
-  //   Elementet og alt inde i det (titel, person, dato, knapper) forsvinder.
-  //
-  // EFFEKT I APPEN: Opgavekortet forsvinder øjeblikkeligt fra boardet.
+  // Sekvens: Slet opgavekortet fra siden
 
-  opdaterTæller();
-  // SEKVENS: Opdaterer tæller-tallene efter kortet er fjernet.
-  // EFFEKT I APPEN: Tæller-tallet i kolonnen falder med 1.
+  opdaterTaeller();
+  // Funktion: Opdater tallene i kolonnerne
 }
 
 
-// ==========================================
 // CHAT
-// ==========================================
-
 function toggleChat() {
-// FUNKTION: Skifter chat-vinduets synlighed — åbner det hvis det er lukket, lukker det hvis det er åbent.
-//   Ingen parameter — arbejder altid med det samme chat-element (id="chat-box").
-// EFFEKT I APPEN: Køres når du klikker 💬-knappen i hjørnet af kanban-siden.
+// Funktion: Aabner chat hvis det er lukket - lukker det hvis det er aabent
 
   document.getElementById('chat-box').classList.toggle('open');
-  // SEKVENS: Finder chat-elementet og bruger .toggle('open').
-  //
-  // classList.toggle('open')
-  //   — Denne metode er speciel: den gør begge ting automatisk:
-  //   — HVIS 'open'-klassen ikke er der: TILFØJ den.
-  //   — HVIS 'open'-klassen allerede er der: FJERN den.
-  //
-  // CSS-reglerne:
-  //   — Uden 'open': ".chat-box { display: none }" → usynlig.
-  //   — Med 'open': ".chat-box.open { display: flex }" → synlig.
-  //
-  // EFFEKT I APPEN: Første klik åbner chat-vinduet. Andet klik lukker det. Tredje klik åbner igen. Osv.
+  // Sekvens: toggle tilfojer open HVIS det ikke er der - fjerner det HVIS det er der
+  // Forgrening: HVIS chat-boksen har open, SÅ vis den - HVIS ikke, SÅ skjul den
 }
 
 function sendMsg() {
-// FUNKTION: Sender en ny chat-besked og viser den i chat-vinduet.
-//   Ingen parameter — henter selv teksten fra input-elementet.
-// EFFEKT I APPEN: Køres ved klik på ➤ eller ved Enter-tryk i chat-inputfeltet.
+// Funktion: Sender en ny chat-besked
 
   const input = document.getElementById('chat-in');
-  // VARIABEL: const input gemmer en reference til chat-inputfeltet.
-  //   Vi gemmer det i en variabel for at undgå at hente det flere gange (mere effektivt).
-  //
-  // EFFEKT I APPEN: Giver adgang til inputfeltets indhold (.value) og mulighed for at tømme det.
+  // Variabel: input gemmer en reference til chat-inputfeltet
 
   const tekst = input.value.trim();
-  // VARIABEL: const tekst gemmer det brugeren har skrevet.
-  //
-  // input.value
-  //   — Henter inputfeltets aktuelle tekst-indhold.
-  //
-  // .trim()
-  //   — En string-metode der fjerner mellemrum (og linjeskift) fra STARTEN og SLUTNINGEN af teksten.
-  //   — "  Hej  " → "Hej"
-  //   — "   " (kun mellemrum) → "" (tom streng)
-  //   — Formål: Forhindrer at en besked med kun mellemrum sendes som "en besked".
-  //
-  // EFFEKT I APPEN: Gemmer den rene besked-tekst uden unødvendige mellemrum.
+  // Variabel: tekst gemmer det brugeren har skrevet - trim fjerner mellemrum for og efter
 
   if (!tekst) return;
-  // FORGRENING: if med negation.
-  //
-  // !tekst
-  //   — ! vender boolsk værdi om: sand → falsk, falsk → sand.
-  //   — En tom streng "" er "falsy" → !tekst er sand → betingelsen er opfyldt.
-  //   — En ikke-tom streng "Hej" er "truthy" → !tekst er falsk → betingelsen er ikke opfyldt.
-  //
-  // return
-  //   — Stopper funktionen øjeblikkeligt. Intet sendes.
-  //
-  // EFFEKT I APPEN: Forhindrer tomme beskeder. Klik på send uden at skrive noget gør ingenting.
+  // Forgrening: HVIS tekst er tom SÅ stop - send ikke tomme beskeder
 
   const besked = document.createElement('div');
-  // VARIABEL: const besked gemmer et nyt tomt div-element til beskeden.
-  //
-  // EFFEKT I APPEN: En ny tom beskedboks er klar til at blive bygget.
+  // Variabel: besked er et nyt tomt HTML-element til beskeden
 
   besked.className = 'msg me';
-  // SEKVENS: Giver besked-elementet CSS-klasserne "msg" og "me" (begge klasser på én gang).
-  //   "msg" — grundstyling for alle beskeder (afrundede hjørner, skriftstørrelse).
-  //   "me" — din besked er blå (#5b7fff) og højrejusteret.
-  //
-  // EFFEKT I APPEN: Din besked ser ud som en blå boks til højre — som i alle andre chat-apps.
+  // Sekvens: Giv beskeden klasserne msg og me
+  // Forgrening: CSS siger - HVIS beskeden har me, SÅ goer den blaa og til hojre
 
   besked.innerHTML = `<b>Dig:</b> ${tekst}`;
-  // SEKVENS: Sætter beskedens HTML-indhold via template literal.
-  //   <b>Dig:</b> — "Dig:" vises i fed tekst.
-  //   ${tekst} — den faktiske besked-tekst indsættes.
-  //
-  // EFFEKT I APPEN: Beskeden vises som fx "Dig: Hvornår mødes vi?" inde i den blå boks.
+  // Sekvens: Byg beskedens indhold med Dig: og den skrevne tekst
 
   const msgs = document.getElementById('chat-msgs');
-  // VARIABEL: const msgs gemmer en reference til besked-containeren.
-  //   Bruges til både at tilføje beskeden og til at scrolle ned.
-  //
-  // EFFEKT I APPEN: Giver adgang til besked-området i chat-vinduet.
+  // Variabel: msgs gemmer en reference til besked-omraadet
 
   msgs.appendChild(besked);
-  // SEKVENS: Tilføjer den nye besked som det SIDSTE element i besked-containeren.
-  //   Beskederne stable sig naturligt nedefra — nyeste besked er altid nederst.
-  //
-  // EFFEKT I APPEN: Din besked dukker op nederst i chat-vinduet.
+  // Sekvens: Tilfoej beskeden til bunden af chat-vinduet
 
   msgs.scrollTop = msgs.scrollHeight;
-  // SEKVENS: Scroller besked-containeren automatisk til bunden.
-  //
-  // msgs.scrollHeight
-  //   — Den fulde højde af elementets indhold (inkl. det der ikke er synligt pga. scroll).
-  //   — Fx: 450px selvom containeren kun viser 200px.
-  //
-  // msgs.scrollTop = msgs.scrollHeight
-  //   — Sætter scroll-positionen til den fulde højde = scroller helt ned til bunden.
-  //
-  // EFFEKT I APPEN: Chat-vinduet scroller automatisk ned til den nyeste besked.
-  //   Brugeren behøver ikke selv scrolle for at se sin besked.
+  // Sekvens: Scroll automatisk ned til den nyeste besked
 
   input.value = '';
-  // SEKVENS: Tømmer inputfeltets indhold efter beskeden er sendt.
-  //   Sætter .value til en tom streng.
-  //
-  // EFFEKT I APPEN: Inputfeltet er tomt og klart til næste besked.
+  // Variabel: Tom inputfeltet efter beskeden er sendt
 }
 
 </script>
 </body>
-<!-- SEKVENS: Afslutter body-sektionen. Alt visuelt indhold og al JavaScript er nu defineret.
-     EFFEKT I APPEN: Intet bruger-synligt indhold defineres efter denne tag. -->
 </html>
-<!-- SEKVENS: Afslutter hele HTML-dokumentet.
-     EFFEKT I APPEN: Browseren har nu læst og fortolket al koden — appen er fuldt indlæst og klar. -->
