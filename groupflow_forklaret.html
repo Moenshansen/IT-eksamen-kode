@@ -1,226 +1,81 @@
 <!DOCTYPE html>
-<!-- Sekvens: Fortaeller browseren at dette er en hjemmeside -->
 <html lang="da">
-<!-- Sekvens: Starter dokumentet. lang=da betyder dansk -->
 <head>
-<!-- Sekvens: Indstillinger for siden - ikke synligt for brugeren -->
   <meta charset="UTF-8"/>
-  <!-- Sekvens: Saetter sproget til dansk saa ae, oe og aa virker -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- Sekvens: Goer siden mobilvenlig -->
   <title>GroupFlow</title>
-  <!-- Sekvens: Teksten der vises i browser-fanen -->
 <style>
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-/* Sekvens: Nulstiller al standard-afstand i browseren */
-
 body { font-family: Arial, sans-serif; background: #f4f4f0; color: #1a1a1a; }
-/* Sekvens: Saetter skrifttype, baggrundsfarve og tekstfarve for hele siden */
-
 .page { display: none; min-height: 100vh; }
-/* Sekvens: Alle sider er skjulte som standard */
-
 .page.active { display: block; }
-/* Forgrening: HVIS en side har klassen active, SÅ vis den - ellers forbliver den skjult */
-
 #login { align-items: center; justify-content: center; min-height: 100vh; background: #eef1ff; }
-/* Sekvens: Login-siden faar lys blaa baggrund og centrerer indholdet */
-
 #login.active { display: flex; }
-/* Forgrening: HVIS login har klassen active, SÅ vis den med flex saa kortet er i midten */
-
 .center-card { background: white; padding: 40px; border-radius: 16px; width: 380px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-/* Sekvens: Den hvide login-boks - hvid baggrund, afrundede hjoerner, skygge */
-
 .center-card h1 { font-size: 24px; margin-bottom: 4px; }
-/* Sekvens: Overskriften i login-boksen er stor */
-
 .center-card .sub { color: #888; font-size: 14px; margin-bottom: 20px; }
-/* Sekvens: Underteksten er graa og lille */
-
 .center-card .link { text-align: center; color: #5b7fff; font-size: 13px; cursor: pointer; margin-top: 12px; }
-/* Sekvens: Den blaa klikbare tekst nederst i login-boksen */
-
 nav { display: flex; align-items: center; gap: 10px; padding: 14px 24px; background: white; border-bottom: 1px solid #e0e0e0; }
-/* Sekvens: Den hvide bjælke øverst med logo og knapper */
-
 nav span { font-weight: bold; font-size: 16px; margin-right: auto; }
-/* Sekvens: Logo-teksten er fed og skubber knapperne til hojre */
-
 .content { max-width: 860px; margin: 0 auto; padding: 28px 24px; }
-/* Sekvens: Indholdet er max 860px bredt og centreret */
-
 .content h2 { font-size: 24px; margin-bottom: 16px; }
-/* Sekvens: Store overskrifter er 24px */
-
 .content h3 { font-size: 16px; margin: 20px 0 10px; color: #333; }
-/* Sekvens: Mellemstore overskrifter er graa */
-
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
-/* Sekvens: Statistikboksene vises i 3 kolonner ved siden af hinanden */
-
 .stat { background: white; border-radius: 12px; padding: 18px; text-align: center; border: 1px solid #e0e0e0; font-size: 13px; color: #666; }
-/* Sekvens: En enkelt statistikboks er hvid med afrundede hjoerner */
-
 .stat .num { font-size: 30px; font-weight: bold; color: #1a1a1a; margin-bottom: 4px; }
-/* Sekvens: Tallet i statistikboksen er stort og fed */
-
 .deadline { padding: 10px 14px; border-radius: 10px; margin-bottom: 8px; font-size: 14px; }
-/* Sekvens: Grundform for alle deadline-bokse */
-
 .deadline.red    { background: #fff0f0; border-left: 4px solid #ff6b6b; }
-/* Forgrening: HVIS deadline har klassen red, SÅ faar den roed farve - betyder det haster */
-
 .deadline.yellow { background: #fff8ee; border-left: 4px solid #f4a63a; }
-/* Forgrening: HVIS deadline har klassen yellow, SÅ faar den gul farve - betyder snart */
-
 .deadline.green  { background: #f0fff8; border-left: 4px solid #43c98e; }
-/* Forgrening: HVIS deadline har klassen green, SÅ faar den groen farve - betyder god tid */
-
 .notif { padding: 10px 14px; background: white; border-radius: 10px; margin-bottom: 8px; font-size: 14px; border: 1px solid #e8e8e8; }
-/* Sekvens: Hvide notifikationsbokse med afrundede hjoerner */
-
 .notif span { color: #aaa; font-size: 12px; }
-/* Sekvens: Tidsstemplet i notifikationer er lysegraat og lille */
-
 .group-row { padding: 14px 16px; background: white; border-radius: 12px; margin-bottom: 8px; cursor: pointer; font-size: 14px; font-weight: 500; border: 1px solid #e0e0e0; display: flex; align-items: center; gap: 10px; transition: background 0.15s; }
-/* Sekvens: Klikbare gruppe-raekker er hvide med haand-cursor */
-
 .group-row:hover { background: #f0f4ff; }
-/* Sekvens: Gruppe-raekken faar blaa baggrund naar musen holder over den */
-
 .group-row.dashed { border: 2px dashed #ccc; color: #aaa; justify-content: center; background: transparent; }
-/* Forgrening: HVIS gruppe-raekken har klassen dashed, SÅ faar den stiplet kant og graa farve */
-
 .group-row.dashed:hover { border-color: #5b7fff; color: #5b7fff; background: #eef1ff; }
-/* Sekvens: Den stiplede boks bliver blaa naar musen holder over den */
-
 .row-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-/* Sekvens: Placer to elementer - et til venstre og et til hojre */
-
 .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: start; }
-/* Sekvens: Kanban-boardet har 3 kolonner ved siden af hinanden */
-
 .col { background: #efefeb; border-radius: 14px; padding: 14px; min-height: 300px; }
-/* Sekvens: En kanban-kolonne er lysegraa med afrundede hjoerner */
-
 .col.drag-over { background: #dde5ff; border: 2px dashed #5b7fff; }
-/* Forgrening: HVIS kolonnen har klassen drag-over (sat af JavaScript), SÅ faar den blaa farve */
-
 .col-head { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 14px; margin-bottom: 12px; }
-/* Sekvens: Toppen af kolonnen med navn, taeller og plus-knap */
-
 .col-head button { margin-left: auto; background: none; border: none; font-size: 18px; cursor: pointer; color: #888; }
-/* Sekvens: Plus-knappen i kolonnen er graa og skubbet til hojre */
-
 .col-head button:hover { color: #5b7fff; }
-/* Sekvens: Plus-knappen bliver blaa ved hover */
-
 .count { background: white; border-radius: 20px; padding: 1px 8px; font-size: 12px; color: #888; border: 1px solid #ddd; }
-/* Sekvens: Det lille tal der viser antal opgaver i kolonnen */
-
 .task { background: white; border-radius: 10px; padding: 12px; margin-bottom: 8px; border: 1px solid #e0e0e0; cursor: grab; font-size: 14px; font-weight: 500; }
-/* Sekvens: Et opgavekort er hvidt med grab-cursor saa man kan traekke det */
-
 .task:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-/* Sekvens: Opgavekortet faar en skygge naar musen holder over det */
-
 .task.dragging { opacity: 0.4; }
-/* Forgrening: HVIS opgavekortet har klassen dragging (sat af JavaScript), SÅ bliver det halvt gennemsigtigt */
-
 .task-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 12px; color: #888; }
-/* Sekvens: Bunden af opgavekortet med person, dato og slet-knap */
-
 .slet { background: none; border: none; cursor: pointer; font-size: 14px; padding: 0; color: #ccc; margin-left: 6px; }
-/* Sekvens: Skraldespands-ikonet er diskret og lysegraat */
-
 .slet:hover { color: #ff6b6b; background: none; }
-/* Sekvens: Skraldespanden bliver roed ved hover som en advarsel */
-
 .badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; white-space: nowrap; }
-/* Sekvens: Grundform for alle status-maerker - pille-form med fed tekst */
-
 .badge.red    { background: #fff0f0; color: #ff6b6b; }
-/* Forgrening: HVIS badge har klassen red, SÅ faar den roed farve */
-
 .badge.yellow { background: #fff8ee; color: #f4a63a; }
-/* Forgrening: HVIS badge har klassen yellow, SÅ faar den gul farve */
-
 .badge.green  { background: #f0fff8; color: #43c98e; }
-/* Forgrening: HVIS badge har klassen green, SÅ faar den groen farve */
-
 input { display: block; width: 100%; padding: 10px 14px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; margin-bottom: 12px; outline: none; }
-/* Sekvens: Alle inputfelter er fuldt brede med afrundede hjoerner */
-
 input:focus { border-color: #5b7fff; }
-/* Sekvens: Inputfeltet faar blaa kant naar man klikker paa det */
-
 button { padding: 10px 18px; background: #5b7fff; color: white; border: none; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; }
-/* Sekvens: Alle knapper er blaa piller med hvid tekst */
-
 button:hover { background: #4a6eee; }
-/* Sekvens: Knapper bliver moerkere blaa ved hover */
-
 button.outline { background: white; color: #555; border: 1.5px solid #ddd; }
-/* Forgrening: HVIS knappen har klassen outline, SÅ er den hvid med graa kant i stedet */
-
 button.outline:hover { background: #f5f5f5; }
-/* Sekvens: Outline-knapper bliver let graa ved hover */
-
 button.danger { background: #fff0f0; color: #ff6b6b; border: 1.5px solid #ffd6d6; }
-/* Forgrening: HVIS knappen har klassen danger, SÅ er den roed - bruges til farlige handlinger */
-
 button.danger:hover { background: #ffe0e0; }
-/* Sekvens: Danger-knapper bliver moerkere roede ved hover */
-
 .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 100; }
-/* Sekvens: Det moerke lag bag popup-vinduer - daekker hele skaermen */
-
 .overlay.hidden { display: none; }
-/* Forgrening: HVIS overlay har klassen hidden, SÅ er popup-vinduet skjult */
-
 .modal { background: white; padding: 32px; border-radius: 20px; width: 420px; max-width: 95vw; box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
-/* Sekvens: Den hvide popup-boks med afrundede hjoerner og skygge */
-
 .modal h3 { font-size: 20px; margin-bottom: 16px; }
-/* Sekvens: Overskriften i popup-vinduet er stor */
-
 .modal p { font-size: 14px; color: #666; margin-bottom: 16px; }
-/* Sekvens: Tekst i popup-vinduer er graa og lille */
-
 .modal-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
-/* Sekvens: Knapperne i popup-vinduet sidder til hojre */
-
 .chat-btn { position: fixed; bottom: 24px; right: 24px; width: 52px; height: 52px; border-radius: 50%; font-size: 22px; padding: 0; box-shadow: 0 4px 16px rgba(91,127,255,0.4); }
-/* Sekvens: Den runde chat-knap sidder fast i hojre hjorne af skaermen */
-
 .chat-box { position: fixed; bottom: 88px; right: 24px; width: 300px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); border: 1px solid #e0e0e0; display: none; flex-direction: column; }
-/* Sekvens: Chat-vinduet sidder over chat-knappen og er skjult som standard */
-
 .chat-box.open { display: flex; }
-/* Forgrening: HVIS chat-boksen har klassen open (sat af JavaScript), SÅ vises den */
-
 .chat-msgs { padding: 14px; height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-/* Sekvens: Besked-omraadet er 200px hoejt og scroller hvis der er mange beskeder */
-
 .msg { font-size: 13px; padding: 6px 10px; border-radius: 10px; max-width: 85%; }
-/* Sekvens: En chat-besked er afrundet og max 85% bred */
-
 .msg.other { background: #f0f0f0; align-self: flex-start; }
-/* Forgrening: HVIS beskeden har klassen other, SÅ er den graa og til venstre - andres beskeder */
-
 .msg.me { background: #5b7fff; color: white; align-self: flex-end; }
-/* Forgrening: HVIS beskeden har klassen me, SÅ er den blaa og til hojre - dine beskeder */
-
 .chat-input { display: flex; gap: 8px; padding: 10px; border-top: 1px solid #eee; }
-/* Sekvens: Inputraekken i bunden af chatten med tekstfelt og send-knap */
-
 .chat-input input { margin: 0; }
-/* Sekvens: Fjerner ekstra afstand under inputfeltet i chatten */
-
 .chat-input button { padding: 8px 14px; }
-/* Sekvens: Send-knappen i chatten er lidt mindre end normale knapper */
 
 </style>
 </head>
@@ -228,366 +83,162 @@ button.danger:hover { background: #ffe0e0; }
 
 <!-- LOGIN SIDE -->
 <div id="login" class="page active">
-<!-- Variabel: id="login" er sidens navn som JavaScript bruger til at finde den
-     class="page active" viser denne side fordi den har active fra starten -->
   <div class="center-card">
     <h1>🌀 GroupFlow</h1>
-    <!-- Sekvens: App-titlen vises stor og fed -->
     <p class="sub">Gruppearbejde gjort nemt</p>
-    <!-- Sekvens: Underteksten vises graa og lille -->
     <input type="email" placeholder="E-mail"/>
-    <!-- Sekvens: Inputfelt til e-mail - type=email giver @ paa mobilens tastatur -->
     <input type="password" placeholder="Adgangskode"/>
-    <!-- Sekvens: Inputfelt til adgangskode - type=password skjuler teksten som prikker -->
     <button onclick="goTo('dashboard')">Log ind</button>
-    <!-- Funktion: onclick kalder funktionen goTo med parameteren 'dashboard'
-         goTo skifter siden til dashboard -->
     <button class="outline" onclick="goTo('dashboard')">Opret bruger</button>
-    <!-- Funktion: Samme som Log ind - kalder goTo med parameteren 'dashboard' -->
     <p class="link">Glemt adgangskode?</p>
-    <!-- Sekvens: Blaa tekst der ser klikbar ud -->
   </div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="page">
-<!-- Variabel: id="dashboard" er sidens navn - JavaScript finder den med dette navn
-     Ingen active-klasse her - siden er skjult til JavaScript aktiverer den -->
   <nav>
     <span>🌀 GroupFlow</span>
-    <!-- Sekvens: App-logo til venstre - CSS skubber knapperne til hojre -->
     <button onclick="goTo('groups')">👥 Grupper</button>
-    <!-- Funktion: Kalder goTo med parameteren 'groups' - skifter til gruppe-siden -->
     <button onclick="goTo('login')">🚪 Log ud</button>
-    <!-- Funktion: Kalder goTo med parameteren 'login' - sender tilbage til login -->
   </nav>
   <div class="content">
     <h2>Hej, Benjamin 👋</h2>
-    <!-- Sekvens: Velkomsttekst med brugerens navn -->
     <div class="stats">
-      <!-- Sekvens: Grid-container til statistikboksene -->
       <div class="stat"><div class="num">3</div>Aktive grupper</div>
-      <!-- Sekvens: Statistikboks med tallet 3 og teksten Aktive grupper -->
       <div class="stat"><div class="num">4</div>Kommende deadlines</div>
-      <!-- Sekvens: Statistikboks med tallet 4 og teksten Kommende deadlines -->
     </div>
     <h3>⏰ Kommende deadlines</h3>
-    <!-- Sekvens: Sektionsoverskrift -->
     <div class="deadline red">📌 Marketinganalyse — <b>I morgen</b> · Markedsføring A</div>
-    <!-- Forgrening: Klassen red giver roed farve - haster -->
     <div class="deadline yellow">📌 Fremlæggelse IT — <b>Om 4 dage</b> · IT & Samfund</div>
-    <!-- Forgrening: Klassen yellow giver gul farve - snart -->
     <div class="deadline yellow">📌 Gruppekontrakt — <b>Om 6 dage</b> · Matematik</div>
-    <!-- Forgrening: Klassen yellow giver gul farve - snart -->
     <div class="deadline green">📌 Rapport del 1 — <b>Om 14 dage</b> · Markedsføring A</div>
-    <!-- Forgrening: Klassen green giver groen farve - god tid -->
     <h3>👥 Aktive grupper</h3>
-    <!-- Sekvens: Sektionsoverskrift -->
     <div class="group-row" onclick="goTo('kanban')">📊 Markedsføring A — 4 medlemmer <span class="badge red">Haster</span></div>
-    <!-- Funktion: onclick kalder goTo med 'kanban' - aabner kanban-boardet
-         Forgrening: badge red giver rodt Haster-maerke -->
     <div class="group-row" onclick="goTo('kanban')">💻 IT & Samfund — 3 medlemmer <span class="badge green">På sporet</span></div>
-    <!-- Funktion: onclick kalder goTo med 'kanban'
-         Forgrening: badge green giver groent paa-sporet-maerke -->
     <div class="group-row" onclick="goTo('kanban')">🔢 Matematik — 5 medlemmer <span class="badge yellow">Ny gruppe</span></div>
-    <!-- Funktion: onclick kalder goTo med 'kanban'
-         Forgrening: badge yellow giver gult ny-gruppe-maerke -->
     <h3>🔔 Notifikationer</h3>
-    <!-- Sekvens: Sektionsoverskrift -->
     <div class="notif">📌 Aya har tilføjet en opgave · <span>10 min. siden</span></div>
-    <!-- Sekvens: Notifikationsboks - span-tagget giver tidsstemplet graa farve -->
     <div class="notif">💬 Mads: "Hvem laver intro?" · <span>1 time siden</span></div>
-    <!-- Sekvens: Notifikationsboks med chat-besked -->
     <div class="notif">✅ Opgave markeret færdig · <span>3 timer siden</span></div>
-    <!-- Sekvens: Notifikationsboks om faerdig opgave -->
   </div>
 </div>
 
 <!-- GRUPPER -->
 <div id="groups" class="page">
-<!-- Variabel: id="groups" er sidens navn som JavaScript bruger -->
   <nav>
     <span>🌀 GroupFlow</span>
-    <!-- Sekvens: App-logo -->
     <button onclick="goTo('dashboard')">🏠 Dashboard</button>
-    <!-- Funktion: Kalder goTo med 'dashboard' - tilbage til oversigten -->
     <button onclick="goTo('login')">🚪 Log ud</button>
-    <!-- Funktion: Kalder goTo med 'login' - logger ud -->
   </nav>
   <div class="content">
     <div class="row-between">
-      <!-- Sekvens: Placer overskrift til venstre og knap til hojre -->
       <h2>Mine grupper</h2>
-      <!-- Sekvens: Sidens store overskrift -->
       <button onclick="showModal('modal-gruppe')">+ Opret gruppe</button>
-      <!-- Funktion: Kalder showModal med parameteren 'modal-gruppe' - aabner popup-vinduet -->
     </div>
     <div class="group-row" onclick="goTo('kanban')">📊 Markedsføring A · Deadline: 9. maj <span class="badge red">Haster</span></div>
-    <!-- Funktion: Kalder goTo med 'kanban' - aabner kanban
-         Forgrening: badge red giver rodt maerke -->
     <div class="group-row" onclick="goTo('kanban')">💻 IT & Samfund · Deadline: 12. maj <span class="badge green">70% færdigt</span></div>
-    <!-- Funktion: Kalder goTo med 'kanban'
-         Forgrening: badge green giver groent maerke -->
     <div class="group-row" onclick="goTo('kanban')">🔢 Matematik Projekt · Deadline: 14. maj <span class="badge yellow">Startet</span></div>
-    <!-- Funktion: Kalder goTo med 'kanban'
-         Forgrening: badge yellow giver gult maerke -->
     <div class="group-row dashed" onclick="showModal('modal-gruppe')">＋ Opret ny gruppe</div>
-    <!-- Funktion: Kalder showModal med 'modal-gruppe' - aabner opret-popup
-         Forgrening: klassen dashed giver stiplet kant og graa farve -->
   </div>
 </div>
 
 <!-- KANBAN -->
 <div id="kanban" class="page">
-<!-- Variabel: id="kanban" er sidens navn som JavaScript bruger -->
   <nav>
     <span onclick="goTo('groups')" style="cursor:pointer;">← Grupper</span>
-    <!-- Funktion: Kalder goTo med 'groups' - tilbage til gruppe-listen -->
     <span style="margin-right:auto; margin-left:0;">📊 Markedsføring A</span>
-    <!-- Sekvens: Gruppens navn i navbaren - skubber knapperne til hojre -->
     <button onclick="showModal('modal-inviter')">+ Invitér</button>
-    <!-- Funktion: Kalder showModal med 'modal-inviter' - aabner invitations-popup -->
     <button class="danger" onclick="showModal('modal-forlad')">Forlad gruppe</button>
-    <!-- Funktion: Kalder showModal med 'modal-forlad' - aabner bekraeftelses-popup
-         Forgrening: klassen danger giver roed farve -->
   </nav>
   <div class="content">
     <div class="board">
-      <!-- Sekvens: Grid-container med 3 kolonner -->
-
-      <!-- KOLONNE: TO DO -->
       <div class="col" id="col-todo" ondragover="dragOver(event)" ondrop="drop(event,'todo')" ondragleave="dragLeave(event)">
-      <!-- Variabel: id="col-todo" bruges af JavaScript til at finde kolonnen
-           Funktion: ondragover kalder dragOver naar et kort holdes over kolonnen
-           Funktion: ondrop kalder drop med parameteren 'todo' naar et kort slippes her
-           Funktion: ondragleave kalder dragLeave naar et kort forlader kolonnen -->
-        <div class="col-head">⬜ To do
-          <span class="count" id="cnt-todo">3</span>
-          <!-- Variabel: id="cnt-todo" bruges af JavaScript til at opdatere dette tal -->
-          <button onclick="addTask('todo')">＋</button>
-          <!-- Funktion: Kalder addTask med parameteren 'todo' - ny opgave i To do -->
-        </div>
+        <div class="col-head">⬜ To do <span class="count" id="cnt-todo">3</span><button onclick="addTask('todo')">＋</button></div>
         <div id="cards-todo">
-        <!-- Variabel: id="cards-todo" bruges af JavaScript til at tilfoeje kort her -->
-          <div class="task" draggable="true" ondragstart="dragStart(event)">Skriv indledning
-          <!-- Sekvens: Et opgavekort der kan traekkes - draggable=true tillader drag
-               Funktion: ondragstart kalder dragStart naar man begynder at traekke -->
-            <div class="task-foot">
-              <span>Benjamin</span>
-              <!-- Sekvens: Ansvarlig person -->
-              <span class="badge red">9. maj</span>
-              <!-- Forgrening: badge red giver roed dato-pille -->
-              <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- Funktion: Kalder sletOpgave med this - this er denne knap
-                   JavaScript bruger knappen til at finde og slette hele kortet -->
-            </div>
-          </div>
-          <div class="task" draggable="true" ondragstart="dragStart(event)">Find statistikker
-          <!-- Sekvens: Andet opgavekort der kan traekkes -->
-            <div class="task-foot">
-              <span>Aya</span>
-              <!-- Sekvens: Ansvarlig person -->
-              <span class="badge yellow">12. maj</span>
-              <!-- Forgrening: badge yellow giver gul dato-pille -->
-              <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- Funktion: Kalder sletOpgave med this for at slette dette kort -->
-            </div>
-          </div>
-          <div class="task" draggable="true" ondragstart="dragStart(event)">Udform konklusion
-          <!-- Sekvens: Tredje opgavekort der kan traekkes -->
-            <div class="task-foot">
-              <span>Mikkel</span>
-              <!-- Sekvens: Ansvarlig person -->
-              <span class="badge green">14. maj</span>
-              <!-- Forgrening: badge green giver groen dato-pille -->
-              <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- Funktion: Kalder sletOpgave med this for at slette dette kort -->
-            </div>
-          </div>
+          <div class="task" draggable="true" ondragstart="dragStart(event)">Skriv indledning<div class="task-foot"><span>Benjamin</span><span class="badge red">9. maj</span><button class="slet" onclick="sletOpgave(this)">🗑</button></div></div>
+          <div class="task" draggable="true" ondragstart="dragStart(event)">Find statistikker<div class="task-foot"><span>Aya</span><span class="badge yellow">12. maj</span><button class="slet" onclick="sletOpgave(this)">🗑</button></div></div>
+          <div class="task" draggable="true" ondragstart="dragStart(event)">Udform konklusion<div class="task-foot"><span>Mikkel</span><span class="badge green">14. maj</span><button class="slet" onclick="sletOpgave(this)">🗑</button></div></div>
         </div>
       </div>
-
-      <!-- KOLONNE: I GANG -->
       <div class="col" id="col-progress" ondragover="dragOver(event)" ondrop="drop(event,'progress')" ondragleave="dragLeave(event)">
-      <!-- Variabel: id="col-progress" bruges af JavaScript til at finde kolonnen
-           Funktion: ondrop kalder drop med parameteren 'progress' naar kort slippes her -->
-        <div class="col-head">🟡 I gang
-          <span class="count" id="cnt-progress">2</span>
-          <!-- Variabel: id="cnt-progress" opdateres af JavaScript -->
-          <button onclick="addTask('progress')">＋</button>
-          <!-- Funktion: Kalder addTask med parameteren 'progress' - ny opgave i I gang -->
-        </div>
+        <div class="col-head">🟡 I gang <span class="count" id="cnt-progress">2</span><button onclick="addTask('progress')">＋</button></div>
         <div id="cards-progress">
-        <!-- Variabel: id="cards-progress" bruges af JavaScript til at tilfoeje kort her -->
-          <div class="task" draggable="true" ondragstart="dragStart(event)">Lav SWOT-analyse
-          <!-- Sekvens: Opgavekort der kan traekkes -->
-            <div class="task-foot">
-              <span>Benjamin</span>
-              <!-- Sekvens: Ansvarlig person -->
-              <span class="badge red">9. maj</span>
-              <!-- Forgrening: badge red giver roed dato-pille -->
-              <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- Funktion: Kalder sletOpgave med this -->
-            </div>
-          </div>
-          <div class="task" draggable="true" ondragstart="dragStart(event)">Design slides
-          <!-- Sekvens: Andet opgavekort der kan traekkes -->
-            <div class="task-foot">
-              <span>Aya</span>
-              <!-- Sekvens: Ansvarlig person -->
-              <span class="badge yellow">12. maj</span>
-              <!-- Forgrening: badge yellow giver gul dato-pille -->
-              <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- Funktion: Kalder sletOpgave med this -->
-            </div>
-          </div>
+          <div class="task" draggable="true" ondragstart="dragStart(event)">Lav SWOT-analyse<div class="task-foot"><span>Benjamin</span><span class="badge red">9. maj</span><button class="slet" onclick="sletOpgave(this)">🗑</button></div></div>
+          <div class="task" draggable="true" ondragstart="dragStart(event)">Design slides<div class="task-foot"><span>Aya</span><span class="badge yellow">12. maj</span><button class="slet" onclick="sletOpgave(this)">🗑</button></div></div>
         </div>
       </div>
-
-      <!-- KOLONNE: FAERDIG -->
       <div class="col" id="col-done" ondragover="dragOver(event)" ondrop="drop(event,'done')" ondragleave="dragLeave(event)">
-      <!-- Variabel: id="col-done" bruges af JavaScript til at finde kolonnen
-           Funktion: ondrop kalder drop med parameteren 'done' naar kort slippes her -->
-        <div class="col-head">✅ Færdig
-          <span class="count" id="cnt-done">2</span>
-          <!-- Variabel: id="cnt-done" opdateres af JavaScript -->
-          <button onclick="addTask('done')">＋</button>
-          <!-- Funktion: Kalder addTask med parameteren 'done' - ny opgave i Faerdig -->
-        </div>
+        <div class="col-head">✅ Færdig <span class="count" id="cnt-done">2</span><button onclick="addTask('done')">＋</button></div>
         <div id="cards-done">
-        <!-- Variabel: id="cards-done" bruges af JavaScript til at tilfoeje kort her -->
-          <div class="task" draggable="true" ondragstart="dragStart(event)">Opret gruppe
-          <!-- Sekvens: Faerdigt opgavekort der kan traekkes -->
-            <div class="task-foot">
-              <span>Benjamin</span>
-              <!-- Sekvens: Ansvarlig person -->
-              <span class="badge green">✓</span>
-              <!-- Forgrening: badge green giver groent flueben - opgaven er faerdig -->
-              <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- Funktion: Kalder sletOpgave med this -->
-            </div>
-          </div>
-          <div class="task" draggable="true" ondragstart="dragStart(event)">Fordel opgaver
-          <!-- Sekvens: Andet faerdigt opgavekort -->
-            <div class="task-foot">
-              <span>Aya</span>
-              <!-- Sekvens: Ansvarlig person -->
-              <span class="badge green">✓</span>
-              <!-- Forgrening: badge green giver groent flueben -->
-              <button class="slet" onclick="sletOpgave(this)">🗑</button>
-              <!-- Funktion: Kalder sletOpgave med this -->
-            </div>
-          </div>
+          <div class="task" draggable="true" ondragstart="dragStart(event)">Opret gruppe<div class="task-foot"><span>Benjamin</span><span class="badge green">✓</span><button class="slet" onclick="sletOpgave(this)">🗑</button></div></div>
+          <div class="task" draggable="true" ondragstart="dragStart(event)">Fordel opgaver<div class="task-foot"><span>Aya</span><span class="badge green">✓</span><button class="slet" onclick="sletOpgave(this)">🗑</button></div></div>
         </div>
       </div>
-
     </div>
   </div>
   <button class="chat-btn" onclick="toggleChat()">💬</button>
-  <!-- Funktion: Kalder toggleChat - aabner eller lukker chat-vinduet -->
   <div class="chat-box" id="chat-box">
-  <!-- Variabel: id="chat-box" bruges af JavaScript til at aabne og lukke chatten -->
     <div class="chat-msgs" id="chat-msgs">
-    <!-- Variabel: id="chat-msgs" bruges af JavaScript til at tilfoeje nye beskeder -->
       <div class="msg other"><b>Aya:</b> Hvem laver indledningen?</div>
-      <!-- Forgrening: klassen other giver graa boks til venstre - andres besked -->
       <div class="msg me"><b>Dig:</b> Det tager jeg! 🙌</div>
-      <!-- Forgrening: klassen me giver blaa boks til hojre - din besked -->
     </div>
     <div class="chat-input">
-      <!-- Sekvens: Inputraekken i bunden af chatten -->
       <input id="chat-in" placeholder="Skriv besked..." onkeydown="if(event.key==='Enter') sendMsg()"/>
-      <!-- Variabel: id="chat-in" bruges af JavaScript til at hente beskeden du skriver
-           Forgrening: HVIS Enter-tasten trykkes, SÅ kald sendMsg -->
       <button onclick="sendMsg()">➤</button>
-      <!-- Funktion: Kalder sendMsg - sender beskeden -->
     </div>
   </div>
 </div>
 
 <!-- POPUP: OPRET GRUPPE -->
 <div id="modal-gruppe" class="overlay hidden" onclick="closeModal(event)">
-<!-- Variabel: id="modal-gruppe" bruges af JavaScript til at aabne og lukke dette popup
-     Forgrening: klassen hidden holder popup-vinduet skjult som standard
-     Funktion: onclick kalder closeModal - lukker popup hvis man klikker paa baggrunden -->
   <div class="modal">
     <h3>Opret gruppe</h3>
-    <!-- Sekvens: Popup-vinduets overskrift -->
     <input type="text" placeholder="Gruppenavn"/>
-    <!-- Sekvens: Felt til gruppens navn -->
     <input type="text" placeholder="Fag / emne"/>
-    <!-- Sekvens: Felt til fag eller emne -->
     <input type="date"/>
-    <!-- Sekvens: Datovælger til deadline -->
     <input type="email" placeholder="Invitér via e-mail"/>
-    <!-- Sekvens: Felt til at invitere et gruppemedlem -->
     <div class="modal-btns">
       <button class="outline" onclick="hideModal('modal-gruppe')">Annuller</button>
-      <!-- Funktion: Kalder hideModal med 'modal-gruppe' - lukker popup uden at gore noget -->
       <button onclick="hideModal('modal-gruppe')">Opret ✓</button>
-      <!-- Funktion: Kalder hideModal med 'modal-gruppe' - lukker popup -->
     </div>
   </div>
 </div>
 
-<!-- POPUP: INVITER -->
+<!-- POPUP: INVITÉR -->
 <div id="modal-inviter" class="overlay hidden" onclick="closeModal(event)">
-<!-- Variabel: id="modal-inviter" bruges af JavaScript
-     Forgrening: klassen hidden holder popup-vinduet skjult -->
   <div class="modal">
     <h3>Invitér medlemmer</h3>
-    <!-- Sekvens: Popup-vinduets overskrift -->
     <input type="email" placeholder="E-mail adresse"/>
-    <!-- Sekvens: E-mailfelt til invitationen -->
     <div class="modal-btns">
       <button class="outline" onclick="hideModal('modal-inviter')">Annuller</button>
-      <!-- Funktion: Kalder hideModal med 'modal-inviter' - lukker popup -->
       <button onclick="hideModal('modal-inviter')">Send invitation ✓</button>
-      <!-- Funktion: Kalder hideModal med 'modal-inviter' - lukker popup -->
     </div>
   </div>
 </div>
 
 <!-- POPUP: FORLAD GRUPPE -->
 <div id="modal-forlad" class="overlay hidden" onclick="closeModal(event)">
-<!-- Variabel: id="modal-forlad" bruges af JavaScript
-     Forgrening: klassen hidden holder popup-vinduet skjult -->
   <div class="modal">
     <h3>Forlad gruppe?</h3>
-    <!-- Sekvens: Popup-vinduets overskrift som et spoergsmaal -->
     <p>Er du sikker? Du mister adgang til alle opgaver og beskeder.</p>
-    <!-- Sekvens: Advarseltekst til brugeren -->
     <div class="modal-btns">
       <button class="outline" onclick="hideModal('modal-forlad')">Fortryd</button>
-      <!-- Funktion: Kalder hideModal med 'modal-forlad' - lukker popup -->
       <button class="danger" onclick="hideModal('modal-forlad'); goTo('groups')">Ja, forlad</button>
-      <!-- Funktion: Kalder hideModal med 'modal-forlad' OG goTo med 'groups'
-           Semikolon betyder: goer begge ting efter hinanden -->
     </div>
   </div>
 </div>
 
-<!-- POPUP: TILFOEJ OPGAVE -->
+<!-- POPUP: TILFØJ OPGAVE -->
 <div id="modal-task" class="overlay hidden" onclick="closeModal(event)">
-<!-- Variabel: id="modal-task" bruges af JavaScript's addTask til at aabne dette popup
-     Forgrening: klassen hidden holder popup-vinduet skjult -->
   <div class="modal">
     <h3>Tilføj opgave</h3>
-    <!-- Sekvens: Popup-vinduets overskrift -->
     <input id="task-title" type="text" placeholder="Opgavetitel"/>
-    <!-- Variabel: id="task-title" - JavaScript laeder titlen fra dette felt -->
     <input id="task-person" type="text" placeholder="Ansvarlig person"/>
-    <!-- Variabel: id="task-person" - JavaScript laeder personen fra dette felt -->
     <input id="task-date" type="date"/>
-    <!-- Variabel: id="task-date" - JavaScript laeder datoen fra dette felt -->
     <input id="task-col" type="hidden"/>
-    <!-- Variabel: id="task-col" er et skjult felt der gemmer kolonnenavnet
-         addTask skriver kolonnenavnet her, confirmTask laeder det igen -->
     <div class="modal-btns">
       <button class="outline" onclick="hideModal('modal-task')">Annuller</button>
-      <!-- Funktion: Kalder hideModal med 'modal-task' - lukker popup -->
       <button onclick="confirmTask()">Tilføj ✓</button>
-      <!-- Funktion: Kalder confirmTask - laeder felterne og opretter et nyt opgavekort -->
     </div>
   </div>
 </div>
@@ -596,277 +247,273 @@ button.danger:hover { background: #ffe0e0; }
 
 // NAVIGATION
 function goTo(sideId) {
-// Funktion: goTo skifter hvilken side der vises
-// Parameter: sideId er navnet paa den side der skal vises fx 'dashboard'
+// Funktion: goTo skifter hvilken side der vises. Det navn vi sender med når vi kalder funktionen hedder sideId, fx 'dashboard'.
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  // Løkke: Find ALLE sider og fjern active fra dem alle - skjul alle sider
-  // forEach korer koden for hver side: fjern active fra side 1, side 2, side 3, side 4
+  // Løkke: Her går vi igennem alle fire sider én ad gangen og fjerner ordet 'active' fra dem alle.
+  // 'active' er et ord vi selv har valgt som CSS bruger til at bestemme hvilken side der vises, og når det er fjernet fra alle er de alle skjulte.
 
   document.getElementById(sideId).classList.add('active');
-  // Sekvens: Find den side der hedder sideId og tilfoej active saa kun den vises
-  // Forgrening: CSS siger - HVIS en side har active, SÅ vis den
+  // Sekvens: Vi finder den side der har samme navn som sideId og tilføjer ordet 'active' til den.
+  // Forgrening: CSS er sat op sådan at HVIS en side har 'active' SÅ vises den, ellers er den skjult, så nu er kun den ene side synlig.
 }
 
 
 // POPUP-VINDUER
 function showModal(id) {
-// Funktion: showModal viser et popup-vindue
-// Parameter: id er navnet paa det popup der skal aabnes fx 'modal-gruppe'
+// Funktion: showModal åbner et popup-vindue. Det navn vi sender med er id, fx 'modal-gruppe'.
 
   document.getElementById(id).classList.remove('hidden');
-  // Sekvens: Find popup-vinduet og fjern hidden - saa vises det
-  // Forgrening: CSS siger - HVIS overlay har hidden, SÅ skjul det - vi fjerner hidden saa det vises
+  // Sekvens: Vi finder popup-vinduet med det givne navn og fjerner ordet 'hidden' fra det.
+  // Forgrening: CSS siger at HVIS et popup har 'hidden' SÅ er det skjult, så når vi fjerner 'hidden' dukker det frem.
 }
 
 function hideModal(id) {
-// Funktion: hideModal skjuler et popup-vindue igen
-// Parameter: id er navnet paa det popup der skal lukkes
+// Funktion: hideModal lukker et popup-vindue igen. Det navn vi sender med er id på det popup vi vil lukke.
 
   document.getElementById(id).classList.add('hidden');
-  // Sekvens: Find popup-vinduet og tilfoej hidden igen - saa skjules det
+  // Sekvens: Vi finder popup-vinduet og tilføjer ordet 'hidden' igen så det forsvinder.
 }
 
 function closeModal(event) {
-// Funktion: closeModal lukker popup hvis man klikker paa det moerke baglag
-// Parameter: event indeholder information om klikket - hvad blev klikket paa
+// Funktion: closeModal lukker et popup-vindue hvis man klikker på det mørke lag bagved.
+// Det vi sender med er event som er oplysninger om klikket som JavaScript giver os automatisk.
 
   if (event.target.classList.contains('overlay')) {
-  // Forgrening: HVIS det der blev klikket paa er selve baglagget (overlay)
-  //   SÅ luk popup-vinduet
-  //   ELLERS (man klikkede paa den hvide boks) goer ingenting
+  // Forgrening: HVIS det element der blev klikket på har ordet 'overlay' som er det mørke lag bag popup-vinduet
+  // SÅ lukkes det, ellers er der klikket på den hvide boks og der sker ingenting.
 
     event.target.classList.add('hidden');
-    // Sekvens: Tilfoej hidden til baglagget - popup-vinduet forsvinder
+    // Sekvens: Vi tilføjer 'hidden' til det mørke lag så popup-vinduet forsvinder.
   }
 }
 
 
-// DRAG AND DROP - TRAEK OG SLIP OPGAVEKORT
+// TRÆK OG SLIP OPGAVEKORT
 let aktivKort = null;
-// Variabel: aktivKort gemmer det kort der traekkes lige nu
-// let bruges fordi vaerdien aendrer sig - starter som null (ingenting)
+// Variabel: aktivKort er en variabel der husker hvilket opgavekort vi er i gang med at trække.
+// Den starter som null hvilket betyder at ingenting er valgt endnu, og vi bruger let fordi værdien skifter undervejs.
 
 function dragStart(event) {
-// Funktion: dragStart kores naar man begynder at traekke et kort
-// Parameter: event indeholder information om hvad der traekkes
+// Funktion: dragStart køres automatisk af browseren når man begynder at trække et opgavekort.
+// Det vi sender med er event som indeholder oplysninger om hvad der sker herunder hvilket kort der trækkes.
 
   aktivKort = event.currentTarget;
-  // Variabel: Gem det kort der traekkes i aktivKort saa vi husker det til drop
+  // Variabel: Vi gemmer det kort der trækkes i variablen aktivKort.
+  // currentTarget er det element brugeren er i gang med at interagere med, altså selve kortets boks, og nu husker programmet hvilket kort vi trækker.
 
   aktivKort.classList.add('dragging');
-  // Sekvens: Tilfoej dragging til kortet
-  // Forgrening: CSS siger - HVIS kortet har dragging, SÅ goer det halvt gennemsigtigt
+  // Sekvens: Vi tilføjer ordet 'dragging' til det kort vi trækker.
+  // Forgrening: CSS er sat op sådan at HVIS et kort har 'dragging' SÅ bliver det halvt gennemsigtigt, så brugeren kan se at kortet er løftet op.
 }
 
 function dragOver(event) {
-// Funktion: dragOver kores mens et kort holdes over en kolonne
-// Parameter: event indeholder information om bevaegelsen
+// Funktion: dragOver køres automatisk af browseren mens et kort holdes over en kolonne.
+// Det vi sender med er event som indeholder oplysninger om den bevægelse der sker.
 
   event.preventDefault();
-  // Sekvens: Teknisk nodvendig linje - uden den virker drop ikke
+  // Sekvens: Her fortæller vi browseren at vi selv styrer hvad der sker, da browseren normalt ikke tillader at man slipper elementer andre steder.
+  // Uden denne linje ville drop-funktionen aldrig blive kaldt.
 
   event.currentTarget.classList.add('drag-over');
-  // Sekvens: Tilfoej drag-over til kolonnen
-  // Forgrening: CSS siger - HVIS kolonnen har drag-over, SÅ goer den blaa
+  // Sekvens: Vi tilføjer ordet 'drag-over' til den kolonne kortet holdes over, og currentTarget er den kolonne brugeren holder kortet henover.
+  // Forgrening: CSS er sat op sådan at HVIS en kolonne har 'drag-over' SÅ bliver den blå.
 }
 
 function dragLeave(event) {
-// Funktion: dragLeave kores naar kortet forlader en kolonne igen
-// Parameter: event indeholder information om bevaegelsen
+// Funktion: dragLeave køres automatisk af browseren når kortet trækkes væk fra en kolonne igen.
+// Det vi sender med er event som indeholder oplysninger om bevægelsen.
 
   event.currentTarget.classList.remove('drag-over');
-  // Sekvens: Fjern drag-over fra kolonnen - den bliver graa igen
+  // Sekvens: Vi fjerner ordet 'drag-over' fra kolonnen så den skifter tilbage til sin normale grå farve.
 }
 
 function drop(event, kolonne) {
-// Funktion: drop kores naar man slipper kortet over en kolonne
-// Parameter: event indeholder information om slipningen
-// Parameter: kolonne er navnet paa kolonnen fx 'todo', 'progress' eller 'done'
+// Funktion: drop køres automatisk af browseren når man slipper kortet over en kolonne.
+// Det vi sender med er event med oplysninger om slipningen, og kolonne som er det navn vi selv har skrevet i HTML, fx 'todo'.
 
   event.preventDefault();
-  // Sekvens: Teknisk nodvendig linje
+  // Sekvens: Vi fortæller browseren at vi selv styrer hvad der sker, på samme måde som i dragOver.
 
   event.currentTarget.classList.remove('drag-over');
-  // Sekvens: Fjern den blaa farve fra kolonnen
+  // Sekvens: Vi fjerner 'drag-over' fra kolonnen så den blå farve forsvinder.
 
   if (!aktivKort) return;
-  // Forgrening: HVIS aktivKort er null (intet kort traekkes)
-  //   SÅ stop funktionen - der er ikke noget at flytte
+  // Forgrening: HVIS aktivKort stadig er null, altså intet kort er valgt, SÅ stopper funktionen her.
+  // Det er et sikkerhedstjek som forhindrer at programmet fejler hvis der ikke er noget at flytte.
 
   aktivKort.classList.remove('dragging');
-  // Sekvens: Fjern dragging fra kortet - det er normalt igen
+  // Sekvens: Vi fjerner 'dragging' fra kortet så det ser normalt ud igen og ikke halvt gennemsigtigt.
 
   document.getElementById('cards-' + kolonne).appendChild(aktivKort);
-  // Sekvens: Find kortholderen i den rigtige kolonne og flyt kortet derind
-  // 'cards-' + kolonne bliver fx 'cards-todo' eller 'cards-progress'
+  // Sekvens: Vi finder den kasse i HTML som holder kortene i den rigtige kolonne.
+  // 'cards-' + kolonne sætter to tekststykker sammen, fx 'cards-' + 'todo' giver 'cards-todo', og kortet flyttes fra den gamle kolonne til den nye.
 
-  opdaterTaeller();
-  // Funktion: Kald opdaterTaeller for at opdatere tallene i kolonnerne
+  opdaterTæller();
+  // Funktion: Vi kalder funktionen der opdaterer de små tal øverst i kolonnerne.
 
   aktivKort = null;
-  // Variabel: Nulstil aktivKort til null - intet kort traekkes laengere
+  // Variabel: Vi sætter aktivKort tilbage til null fordi vi er færdige med at trække.
 }
 
 document.addEventListener('dragend', () => {
-// Sekvens: Lyt efter naar drag er slut - ryd op hvis noget gik galt
+// Sekvens: Her siger vi til browseren at når et træk er helt færdigt skal koden herinde køres.
+// Det bruges som sikkerhed så vi rydder op hvis kortet slippes et forkert sted.
 
   document.querySelectorAll('.task').forEach(t => t.classList.remove('dragging'));
-  // Løkke: Korer for hvert opgavekort - fjern dragging fra alle kort
+  // Løkke: Vi går igennem alle opgavekort og fjerner 'dragging' fra dem alle så intet kort sidder fast i den halvt gennemsigtige tilstand.
 
   document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
-  // Løkke: Korer for hver kolonne - fjern drag-over fra alle kolonner
+  // Løkke: Vi går igennem alle kolonner og fjerner 'drag-over' fra dem alle så ingen kolonne sidder fast med den blå farve.
 });
 
-function opdaterTaeller() {
-// Funktion: Opdaterer tallene oeverst i kolonnerne
+function opdaterTæller() {
+// Funktion: opdaterTæller opdaterer de små tal øverst i kolonnerne så de altid viser det rigtige antal kort.
 
   ['todo', 'progress', 'done'].forEach(kol => {
-  // Løkke: Korer 3 gange - en gang for hver kolonne
-  // 1. gang: kol = 'todo'
-  // 2. gang: kol = 'progress'
-  // 3. gang: kol = 'done'
+  // Løkke: Koden herinde kører 3 gange, én gang for hver kolonne.
+  // Første gang er kol lig med 'todo', anden gang 'progress' og tredje gang 'done'.
 
     const antal = document.getElementById('cards-' + kol).querySelectorAll('.task').length;
-    // Variabel: antal gemmer hvor mange kort der er i kolonnen
-    // const fordi vaerdien ikke aendrer sig efter den er sat
+    // Variabel: antal gemmer hvor mange kort der er i den aktuelle kolonne ved at finde alle elementer med klassen 'task' og tælle dem.
+    // Vi bruger const fordi værdien ikke ændrer sig efter den er sat i dette gennemløb.
 
     document.getElementById('cnt-' + kol).textContent = antal;
-    // Sekvens: Find taeller-elementet og opdater tallet til det rigtige antal
+    // Sekvens: Vi finder tæller-elementet øverst i kolonnen og skriver det nye tal ind i det.
   });
 }
 
 
-// TILFOEJ OPGAVE
+// TILFØJ OPGAVE
 function addTask(kolonne) {
-// Funktion: Aabner popup-vinduet til at tilfoeje en ny opgave
-// Parameter: kolonne er den kolonne opgaven skal havne i fx 'todo'
+// Funktion: addTask åbner popup-vinduet til at tilføje en ny opgave og husker hvilken kolonne vi er i.
+// Det vi sender med er kolonne som er det kolonnenavn vi sender med fra HTML, fx 'todo'.
 
   document.getElementById('task-col').value = kolonne;
-  // Variabel: Gem kolonnenavnet i det skjulte felt saa confirmTask ved hvor kortet skal hen
+  // Variabel: Vi gemmer kolonnenavnet i et usynligt inputfelt som vi bruger som en slags hukommelse.
+  // Brugeren kan ikke se feltet men JavaScript kan læse det igen senere når opgaven skal oprettes.
 
   document.getElementById('task-title').value = '';
-  // Sekvens: Tom titelfeltet saa det er klart til nyt input
+  // Sekvens: Vi tømmer titelfeltet så det er blankt når popup-vinduet åbner.
 
   document.getElementById('task-person').value = '';
-  // Sekvens: Tom personfeltet
+  // Sekvens: Vi tømmer personfeltet.
 
   document.getElementById('task-date').value = '';
-  // Sekvens: Tom datofeltet
+  // Sekvens: Vi tømmer datofeltet.
 
   showModal('modal-task');
-  // Funktion: Kald showModal med 'modal-task' for at aabne popup-vinduet
+  // Funktion: Vi kalder showModal for at åbne popup-vinduet hvor man kan tilføje en opgave.
 }
 
 function confirmTask() {
-// Funktion: Laeder hvad brugeren har skrevet og opretter et nyt opgavekort
+// Funktion: confirmTask læser hvad brugeren har skrevet i felterne og opretter et nyt opgavekort på boardet.
 
   const titel = document.getElementById('task-title').value || 'Ny opgave';
-  // Variabel: titel gemmer teksten fra titelfeltet
-  // Forgrening: HVIS feltet er tomt SÅ brug 'Ny opgave' i stedet
+  // Variabel: titel gemmer det brugeren har skrevet i titelfeltet.
+  // Forgrening: HVIS feltet er tomt SÅ bruges teksten 'Ny opgave' i stedet, da || betyder at vi tager det første og hvis det er tomt tages det andet.
 
   const person = document.getElementById('task-person').value || '?';
-  // Variabel: person gemmer navnet fra personfeltet
-  // Forgrening: HVIS feltet er tomt SÅ brug '?' i stedet
+  // Variabel: person gemmer det brugeren har skrevet i personfeltet.
+  // Forgrening: HVIS feltet er tomt SÅ bruges '?' i stedet.
 
   const dato = document.getElementById('task-date').value;
-  // Variabel: dato gemmer den valgte dato som tekst fx '2025-05-09'
+  // Variabel: dato gemmer den dato brugeren har valgt som tekst, fx '2025-05-09'.
 
   const kol = document.getElementById('task-col').value;
-  // Variabel: kol gemmer kolonnenavnet fra det skjulte felt
+  // Variabel: kol gemmer kolonnenavnet fra det usynlige felt vi satte i addTask.
 
   const datoTekst = dato
     ? new Date(dato).toLocaleDateString('da-DK', { day: 'numeric', month: 'short' })
     : '—';
-  // Variabel: datoTekst gemmer datoen i et laesbart format fx '9. maj'
-  // Forgrening: HVIS dato ikke er tom SÅ formater den til dansk
-  //             HVIS dato er tom SÅ brug tegnet —
+  // Variabel: datoTekst gemmer datoen i et læsevenligt format, fx '9. maj'.
+  // Forgrening: HVIS dato ikke er tom SÅ laves den om til dansk datoformat, og HVIS den er tom SÅ bruges tegnet —.
 
   const kort = document.createElement('div');
-  // Variabel: kort er et nyt tomt HTML-element der er klar til at blive bygget
+  // Variabel: kort er et helt nyt tomt kortelement som vi bygger op fra bunden, og det er endnu ikke synligt på siden.
 
   kort.className = 'task';
-  // Sekvens: Giv kortet CSS-klassen task saa det ser ud som de andre kort
+  // Sekvens: Vi giver kortet CSS-klassen 'task' så det ser ud som de andre kort på boardet.
 
   kort.draggable = true;
-  // Sekvens: Goer kortet draggbart saa det kan traekkes
+  // Sekvens: Vi gør kortet muligt at trække rundt da draggable er en egenskab der slår den funktion til.
 
   kort.ondragstart = dragStart;
-  // Sekvens: Tilknyt dragStart-funktionen til kortet saa det reagerer paa drag
+  // Sekvens: Vi siger at når nogen begynder at trække dette kort skal dragStart-funktionen køres.
 
   kort.innerHTML = `${titel}<div class="task-foot"><span>${person}</span><span class="badge yellow">${datoTekst}</span><button class="slet" onclick="sletOpgave(this)">🗑</button></div>`;
-  // Sekvens: Byg kortets indhold med titel, person, dato og slet-knap
+  // Sekvens: Vi fylder kortet med indhold som titel, person, dato og en slet-knap, og de krøllede parenteser ${} sætter variablernes værdier ind i teksten.
 
   document.getElementById('cards-' + kol).appendChild(kort);
-  // Sekvens: Tilfoej det nye kort til den rigtige kolonne
+  // Sekvens: Vi tilføjer det færdigbyggede kort til den rigtige kolonne på boardet.
 
-  opdaterTaeller();
-  // Funktion: Opdater tallene i kolonnerne
+  opdaterTæller();
+  // Funktion: Vi opdaterer tallene øverst i kolonnerne.
 
   hideModal('modal-task');
-  // Funktion: Luk popup-vinduet
+  // Funktion: Vi lukker popup-vinduet.
 }
 
 
 // SLET OPGAVE
 function sletOpgave(knap) {
-// Funktion: Sletter et opgavekort
-// Parameter: knap er den skraldespands-knap der blev klikket paa
+// Funktion: sletOpgave sletter et opgavekort fra boardet. Det vi sender med er knap, altså den konkrete slet-knap der blev klikket på.
 
   const kort = knap.closest('.task');
-  // Variabel: kort finder det opgavekort der indeholder knappen
-  // closest soeger opad i HTML og finder det naermeste foraeldre-element med klassen task
+  // Variabel: kort finder det opgavekort der indeholder slet-knappen ved at søge opad i HTML efter det nærmeste element med klassen 'task'.
+  // Vi gør dette fordi knappen sidder inde i kortet og vi skal finde selve kortet for at slette det.
 
   kort.remove();
-  // Sekvens: Slet opgavekortet fra siden
+  // Sekvens: Vi fjerner hele opgavekortet fra siden.
 
-  opdaterTaeller();
-  // Funktion: Opdater tallene i kolonnerne
+  opdaterTæller();
+  // Funktion: Vi opdaterer tallene øverst i kolonnerne.
 }
 
 
 // CHAT
 function toggleChat() {
-// Funktion: Aabner chat hvis det er lukket - lukker det hvis det er aabent
+// Funktion: toggleChat åbner chatten hvis den er lukket og lukker den hvis den er åben.
 
   document.getElementById('chat-box').classList.toggle('open');
-  // Sekvens: toggle tilfojer open HVIS det ikke er der - fjerner det HVIS det er der
-  // Forgrening: HVIS chat-boksen har open, SÅ vis den - HVIS ikke, SÅ skjul den
+  // Sekvens: toggle tilføjer 'open' hvis det ikke allerede er der og fjerner det hvis det er der.
+  // Forgrening: HVIS chat-vinduet har 'open' SÅ vises det, ellers er det skjult, da 'open' er det ord vi selv har valgt til at styre det.
 }
 
 function sendMsg() {
-// Funktion: Sender en ny chat-besked
+// Funktion: sendMsg sender en ny besked i chatten.
 
   const input = document.getElementById('chat-in');
-  // Variabel: input gemmer en reference til chat-inputfeltet
+  // Variabel: input gemmer en reference til selve inputfeltet i chatten, altså at vi peger på feltet så vi kan læse og ændre det.
 
   const tekst = input.value.trim();
-  // Variabel: tekst gemmer det brugeren har skrevet - trim fjerner mellemrum for og efter
+  // Variabel: tekst gemmer det brugeren har skrevet, og trim() fjerner mellemrum i starten og slutningen så "  hej  " bliver til "hej".
 
   if (!tekst) return;
-  // Forgrening: HVIS tekst er tom SÅ stop - send ikke tomme beskeder
+  // Forgrening: HVIS tekst er tom, altså brugeren ikke har skrevet noget, SÅ stopper funktionen her og sender ingenting.
 
   const besked = document.createElement('div');
-  // Variabel: besked er et nyt tomt HTML-element til beskeden
+  // Variabel: besked er et nyt tomt element til at vise beskeden i chatten.
 
   besked.className = 'msg me';
-  // Sekvens: Giv beskeden klasserne msg og me
-  // Forgrening: CSS siger - HVIS beskeden har me, SÅ goer den blaa og til hojre
+  // Sekvens: Vi giver beskeden klasserne 'msg' og 'me'.
+  // Forgrening: CSS er sat op sådan at HVIS en besked har 'me' SÅ gøres den blå og placeres til højre.
 
   besked.innerHTML = `<b>Dig:</b> ${tekst}`;
-  // Sekvens: Byg beskedens indhold med Dig: og den skrevne tekst
+  // Sekvens: Vi skriver "Dig:" i fed tekst og derefter den besked brugeren har sendt.
 
   const msgs = document.getElementById('chat-msgs');
-  // Variabel: msgs gemmer en reference til besked-omraadet
+  // Variabel: msgs gemmer en reference til det område i chatten hvor beskederne vises.
 
   msgs.appendChild(besked);
-  // Sekvens: Tilfoej beskeden til bunden af chat-vinduet
+  // Sekvens: Vi tilføjer den nye besked nederst i chat-vinduet.
 
   msgs.scrollTop = msgs.scrollHeight;
-  // Sekvens: Scroll automatisk ned til den nyeste besked
+  // Sekvens: Vi scroller chat-vinduet automatisk ned til den nyeste besked.
+  // scrollTop er hvor langt der er scrollet ned og scrollHeight er den totale højde af alle beskeder, og når vi sætter dem ens scroller vi til bunden.
 
   input.value = '';
-  // Variabel: Tom inputfeltet efter beskeden er sendt
+  // Variabel: Vi tømmer inputfeltet så det er klar til næste besked.
 }
 
 </script>
